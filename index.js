@@ -2,6 +2,7 @@ var express      =require('express');
 var bodyParser   =require('body-parser');
 var userRoutes   =require('./routes/users');
 var mongoose     =require('mongoose');
+var jsonwebtoken =require('jsonwebtoken');
 //Setting Up Database
 mongoose.connect("mongodb://humblefool:pankaj123@ds151951.mlab.com:51951/users",
 { useNewUrlParser: true },(err)=>{
