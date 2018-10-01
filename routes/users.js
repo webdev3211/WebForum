@@ -3,10 +3,27 @@ var router = express.Router();
 var User = require('../models/users');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
-
+var verifyToken=require('../middleware/auth');
+var Post     =require('../models/posts');
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
+/*==============================================
+//SHOW MY OWN POSTS ROUTE
+===============================================*/
+router.get('/myposts',verifyToken,(req,res)=>{
+             Post.find({author:req.decoded.userId})
+                    .then(data=>{
+                        res.status(200).json(data);
+                    })
+                    .catch(err=>{
+                        res.status(501).json({error:err});
+                    });
+
+});
+
+////////////////////////////ENDS HERE 
+
 
 
 /* ================================================
@@ -72,7 +89,7 @@ MIDDLEWARE - Used to grab user's token from headers
 ================================================ */
 
 //Verify if token is present or not
-function verifyToken(req, res, next) {
+/*function verifyToken(req, res, next) {
     var bearerHeader = req.headers['authorization']; // Create token found in headers
     // Check if token was found in headers
     if (bearerHeader !== undefined) {
@@ -104,7 +121,7 @@ function verifyToken(req, res, next) {
 }
 
 
-
+*/
 
 /* ===============================================================
    Route to get user's profile data
