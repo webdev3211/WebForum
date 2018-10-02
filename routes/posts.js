@@ -6,6 +6,187 @@ var jwt = require('jsonwebtoken');
 
 var verifyToken = require('../middleware/auth');
 var Post = require('../models/posts');
+//#########################################
+ //comment routes 
+ // 1>) Route to create comment
+//#########################################
+router.post('/:postId/comment',verifyToken,(req,res,next)=>{
+          Post.findById(req.params.postId).then(data=>{
+            if(!data){
+           return res.status(501).json({
+                success:false,
+                message:"No data  found"
+            });}
+            var comment={
+                name:req.decoded.name,
+                text:req.body.text
+            };       
+            data.comments.push(comment);
+            data.save().then(data=>{
+                res.status(501).json(data);
+            }).catch(err=>{
+                res.status(501).json({
+                    success:false,
+                    error:"Comment cant be created at this moment"
+                });
+            });
+          }).catch(err=>{
+              res.status(501).json({
+                  success:false,
+                  error:"No post found!"});
+          });
+
+});
+//##########################################
+//Comment update
+//###########################################
+router.put('/:postId/comment/:commentId',(req,res,next)=>{
+    //no check for params
+      Post.findById(req.params.postId)
+             .then(data=>{
+                if(!data)
+                return res.status(501).json({
+                    success:false,
+                    message:"No data found!"
+                });
+                if(req.body.text)
+                data.comments.id(req.params.commentId).text=req.body.text;
+                //now save it 
+                data.save()
+                      .then(data=>{
+                       res.status(200).json({
+                           success:true,
+                           data:data
+                       }) ;
+
+                      })
+                      .catch(err=>{
+                        res.status(501).json({
+                            success:false,
+                            data:"Unable to edit"
+                        }) ;
+
+                      });
+
+
+             })
+             .catch(
+                err=>{
+                    res.status(501).json({
+                        success:false,
+                        data:"No post Found"
+                    }) ;
+
+                  }
+             );
+
+
+});
+///#############################################
+//comment delete
+//#############################################
+
+router.delete('/:postId/comment/:commentId',(req,res,next)=>{
+    //no check for params
+      Post.findById(req.params.postId)
+             .then(data=>{
+                if(!data)
+                return res.status(501).json({
+                    success:false,
+                    message:"No data found!"
+                });
+                if(req.body.text)
+                data.comments.id(req.params.commentId).remove();
+                //now save it 
+                data.save()
+                      .then(data=>{
+                       res.status(200).json({
+                           success:true,
+                           data:data
+                       }) ;
+
+                      })
+                      .catch(err=>{
+                        res.status(501).json({
+                            success:false,
+                            data:"Unable to edit"
+                        }) ;
+
+                      });
+
+
+             })
+             .catch(
+                err=>{
+                    res.status(501).json({
+                        success:false,
+                        data:"No post Found"
+                    }) ;
+
+                  }
+             );
+
+
+});
+
+
+
+
+
+
+
+//########################################
+//post like request
+//#####################################
+router.post('/:postId/like',verifyToken,(req,res,next)=>{
+    Post.findByIdAndUpdate(req.params.postId,
+        {$inc: { likes: 1 }},
+        {new:true}).then(data=>{
+      if(!data){
+        return res.status(501).json({
+          success:false,
+          message:"Cant be liked"
+         });}
+         res.status(200).json({
+        success:true,
+        data:data
+    });
+
+    }).catch(err=>{
+        res.status(501).json({
+            success:false,
+            error:"No post found!"});
+    });
+});
+
+//#########################################
+//For Dislikes
+//########################################
+router.post('/:postId/dislike',verifyToken,(req,res,next)=>{
+    Post.findByIdAndUpdate(req.params.postId,
+        {$inc: { dislikes: 1 ,likes:-1}},
+        {new:true}).then(data=>{
+      if(!data){
+     return res.status(501).json({
+          success:false,
+          message:"Cant be liked"
+      });}
+       res.status(200).json({
+           success:true,
+           data:data
+       });
+
+    }).catch(err=>{
+        res.status(501).json({
+            success:false,
+            error:"No post found!"});
+    });
+});
+
+
+
+
+
 
 /* ================================================
 //1 Public post router to fetch all posts on the database
