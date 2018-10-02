@@ -1,4 +1,18 @@
 var mongoose = require('mongoose');
+var commentSchema=mongoose.Schema({
+     name:{
+         type:String,
+         required:true
+     },
+     text:{
+         type:String,
+         required:true
+     },
+     createdAt:{
+         type:Date,
+         default:Date.now
+     }
+});
 
 var postSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
@@ -44,12 +58,8 @@ var postSchema = mongoose.Schema({
     author:{
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'User' 
-    }
-
-  // comments:[{
-    //     type: Schema.Types.ObjectId, 
-    //     ref: 'Comment' 
-    // }]
+    },
+    comments:[commentSchema]
 
 });
 
