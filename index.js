@@ -2,6 +2,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var userRoutes = require('./routes/users');
 var postRoutes =require('./routes/posts');
+var tagRoutes =require('./routes/tags');
 var mongoose = require('mongoose');
 var jsonwebtoken = require('jsonwebtoken');
 const cors = require('cors');
@@ -26,6 +27,7 @@ app.use(bodyParser.json());
 //Setting up Routers
 app.use('/users', userRoutes);
 app.use('/posts',postRoutes);
+app.use('/tags',tagRoutes);
 
 
 //Listen to port
