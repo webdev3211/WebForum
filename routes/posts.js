@@ -9,6 +9,38 @@ var verifyToken = require('../middleware/auth');
 var Post = require('../models/posts');
 
 
+
+// Route to get posts according to tag
+router.get('/:tagId',(req,res,next)=>{
+
+    if(!req.params.tagId)
+    return res.status(501).json({
+        success:false,
+        message:"No Data"
+    });
+    Post.find({tag:req.params.tagId}).then(
+        data=>{
+            if(!data)
+            return res.status(501).json({
+                success:false,
+                message:"No Data"
+            });
+            
+            res.status(200).json({
+                success:true,
+                data:data
+            });
+        }
+    ).catch(
+        err=>{
+            res.status(501).json({
+                success:false,
+                message:"Unable to fetch data from db"
+            });
+        }
+    );
+});
+
 //ALL COMMENTS ROUTES
 
 /* ================================================
@@ -451,7 +483,7 @@ router.get('/:postId', (req, res) => {
 
                 }
             }
-        );
+        ).populate('tag','tag');
     }
 });
 
@@ -478,7 +510,8 @@ router.post('/', verifyToken, (req, res) => {
                 _id: new mongoose.Types.ObjectId(),
                 title: req.body.title,
                 content: req.body.content,
-                author: req.decoded.userId
+                author: req.decoded.userId,
+                tag:req.body.tag //It is id actually
             });
             post.save().then(data => {
                 res.status(200).json({
