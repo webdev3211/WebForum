@@ -3,22 +3,26 @@ var router = express.Router();
 var User = require('../models/users');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
-var verifyToken=require('../middleware/auth');
-var Post     =require('../models/posts');
+var verifyToken = require('../middleware/auth');
+var Post = require('../models/posts');
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
 /*==============================================
 //SHOW MY OWN POSTS ROUTE
 ===============================================*/
-router.get('/myposts',verifyToken,(req,res)=>{
-             Post.find({author:req.decoded.userId})
-                    .then(data=>{
-                        res.status(200).json(data);
-                    })
-                    .catch(err=>{
-                        res.status(501).json({error:err});
-                    });
+router.get('/myposts', verifyToken, (req, res) => {
+    Post.find({
+            author: req.decoded.userId
+        })
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(err => {
+            res.status(501).json({
+                error: err
+            });
+        });
 
 });
 
@@ -27,7 +31,7 @@ router.get('/myposts',verifyToken,(req,res)=>{
 
 
 /* ================================================
-//POST ROUTE FOR LOGIN
+// ROUTE FOR LOGIN
 ================================================== */
 
 router.post('/login', (req, res, next) => {
@@ -65,7 +69,7 @@ router.post('/login', (req, res, next) => {
                     } else {
                         const token = jwt.sign({
                             userId: user._id,
-                            name:user.name
+                            name: user.name
                         }, 'somesecretkey', {
                             expiresIn: '24h'
                         }); // Create a token for client

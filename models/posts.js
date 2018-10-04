@@ -1,17 +1,21 @@
 var mongoose = require('mongoose');
-var commentSchema=mongoose.Schema({
-     name:{
-         type:String,
-         required:true
-     },
-     text:{
-         type:String,
-         required:true
-     },
-     createdAt:{
-         type:Date,
-         default:Date.now
-     }
+var commentSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    text: {
+        type: String,
+        required: true
+    },
+    commentator: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
 });
 
 var postSchema = mongoose.Schema({
@@ -24,7 +28,7 @@ var postSchema = mongoose.Schema({
         type: String,
         required: true
     },
-  createdAt: {
+    createdAt: {
         type: Date,
         default: Date.now
     },
@@ -43,26 +47,27 @@ var postSchema = mongoose.Schema({
         default: 0
     },
 
-    // likedBy: { 
-    //     type: Array
-    // },
+    likedBy: {
+        type: Array,
+        unique: true
+    },
 
-    // dislikedBy: { 
-    //     type: Array 
-    // },
+    dislikedBy: {
+        type: Array,
+        unique: true
 
-    createdAt:{
-        type:Date,
+    },
+
+    createdAt: {
+        type: Date,
         default: Date.now
     },
-    author:{
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User' 
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     },
-    comments:[commentSchema]
+    comments: [commentSchema]
 
 });
 
 module.exports = mongoose.model('Post', postSchema);
-
-
