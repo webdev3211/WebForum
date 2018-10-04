@@ -8,37 +8,44 @@ var async = require('async');
 var verifyToken = require('../middleware/auth');
 var Post = require('../models/posts');
 
+var Tag = require('../models/tags');
 
 
+/* ================================================
 // Route to get posts according to tag
-router.get('/:tagId',(req,res,next)=>{
+ ================================================== */
 
-    if(!req.params.tagId)
-    return res.status(501).json({
-        success:false,
-        message:"No Data"
-    });
-    Post.find({tag:req.params.tagId}).then(
-        data=>{
-            if(!data)
-            return res.status(501).json({
-                success:false,
-                message:"No Data"
-            });
-            
-            res.status(200).json({
-                success:true,
-                data:data
-            });
-        }
-    ).catch(
-        err=>{
-            res.status(501).json({
-                success:false,
-                message:"Unable to fetch data from db"
-            });
-        }
-    );
+router.get('/tags/:tagId', (req, res, next) => {
+
+    if (!req.params.tagId)
+        return res.status(501).json({
+            success: false,
+            message: "No tag provided"
+        });
+    else {
+        Post.find({
+                tag: req.params.tagId
+            })
+            .then(data => {
+                if (!data)
+                    return res.status(501).json({
+                        success: false,
+                        message: "No Data"
+                    });
+
+                res.status(200).json({
+                    success: true,
+                    post: data
+                });
+            }).catch(
+                err => {
+                    res.status(501).json({
+                        success: false,
+                        message: "Unable to fetch post related with this tag"
+                    });
+                }
+            );
+    }
 });
 
 //ALL COMMENTS ROUTES
@@ -446,7 +453,7 @@ router.get('/', (req, res) => {
         }
     }).populate('author', 'name').sort({ //show the latest post (descending order)
         '_id': -1
-    });
+    }).populate('tag', 'tag');
 });
 
 /* =================================================
@@ -476,6 +483,8 @@ router.get('/:postId', (req, res) => {
                         })
                     } else {
                         res.status(200).json({
+                            message: 'holaaa',
+
                             success: true,
                             post: post
                         })
@@ -483,7 +492,7 @@ router.get('/:postId', (req, res) => {
 
                 }
             }
-        ).populate('tag','tag');
+        ).populate('tag', 'tag');
     }
 });
 
@@ -505,25 +514,42 @@ router.post('/', verifyToken, (req, res) => {
                 message: 'Post content is required'
             })
         } else {
-            var post = new Post({
-
-                _id: new mongoose.Types.ObjectId(),
-                title: req.body.title,
-                content: req.body.content,
-                author: req.decoded.userId,
-                tag:req.body.tag //It is id actually
-            });
-            post.save().then(data => {
-                res.status(200).json({
-                    success: true,
-                    message: 'Post Created Successfully',
-                    post: data
-                });
-            }).catch(err => {
-                res.status(501).json({
-                    error: err
+            if (!req.body.tag) {
+                res.json({
+                    success: false,
+                    message: 'Post tag is required'
                 })
-            })
+            } else {
+                Tag.findOne({
+                    _id: req.body.tag
+                }, (err, tag) => {
+                    if (err) {
+                        res.status(501).json({
+                            success: false,
+                            message: 'Not a valid tag ID'
+                        })
+                    } else {
+                        var post = new Post({
+                            _id: new mongoose.Types.ObjectId(),
+                            title: req.body.title,
+                            content: req.body.content,
+                            author: req.decoded.userId,
+                            tag: req.body.tag //It is id actually
+                        });
+                        post.save().then(data => {
+                            res.status(200).json({
+                                success: true,
+                                message: 'Post Created Successfully',
+                                post: data
+                            });
+                        }).catch(err => {
+                            res.status(501).json({
+                                error: err
+                            })
+                        })
+                    }
+                })
+            }
         }
     }
 });
