@@ -6,6 +6,7 @@ var tagRoutes =require('./routes/tags');
 var mongoose = require('mongoose');
 var jsonwebtoken = require('jsonwebtoken');
 const cors = require('cors');
+const querystring = require('querystring');
 
 //Setting Up Database
 mongoose.set('useCreateIndex', true);

@@ -11,6 +11,38 @@ var Post = require('../models/posts');
 var Tag = require('../models/tags');
 
 
+/*================================================
+//Route for Searching 
+==================================================*/
+router.post('/search',(req,res,next)=>{
+    var q=req.body.search;
+    console.info(q);
+   Post.find({content: { '$regex' : q, '$options' : 'i' }})
+           .then(data=>{
+               if(data.length===0)
+               return res.status(200).json({
+                   success:false,
+                   message:"No Result Found!"
+               })
+               res.status(200).json({
+                   success:true,
+                   data:data
+               });
+           })
+           .catch(err=>{
+               res.status(501).json({
+                   success:false,
+                   message:"Unable to find!"
+               });
+           });
+
+   // console.log(req.query);
+  /*  res.status(200).json({
+        query:req.query
+    });*/
+
+});
+
 /* ================================================
 // Route to get posts according to tag
  ================================================== */
