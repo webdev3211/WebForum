@@ -4,7 +4,7 @@ var commentSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    
+
     text: {
         type: String,
         required: true
@@ -29,10 +29,11 @@ var postSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    tag:{
+    tag: {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'Tag'
+        ref: 'Tag'
     },
+
     createdAt: {
         type: Date,
         default: Date.now
