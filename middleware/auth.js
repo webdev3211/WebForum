@@ -1,5 +1,6 @@
-var jwt=require('jsonwebtoken');
-module.exports=function verifyToken(req, res, next) {
+var jwt = require('jsonwebtoken');
+
+module.exports = function verifyToken(req, res, next) {
     var bearerHeader = req.headers['authorization']; // Create token found in headers
     // Check if token was found in headers
     if (bearerHeader !== undefined) {
