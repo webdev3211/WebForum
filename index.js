@@ -1,12 +1,19 @@
-var express = require('express');
+const express = require('express');
+const app = express();
 var bodyParser = require('body-parser');
 var userRoutes = require('./routes/users');
-var postRoutes =require('./routes/posts');
-var tagRoutes =require('./routes/tags');
+var postRoutes = require('./routes/posts');
+var tagRoutes = require('./routes/tags');
 var mongoose = require('mongoose');
 var jsonwebtoken = require('jsonwebtoken');
 const cors = require('cors');
+
+const path = require('path');
+
+
+
 const querystring = require('querystring');
+
 
 //Setting Up Database
 mongoose.set('useCreateIndex', true);
@@ -18,8 +25,12 @@ mongoose.connect("mongodb://humblefool:pankaj123@ds151951.mlab.com:51951/users",
 });
 mongoose.Promise = global.Promise;
 
-//Setting Up the App
-var app = express();
+
+
+app.use(cors({
+    origin: 'http://localhost:4200'
+}))
+
 //Setting up bodyParser Middleware
 app.use(bodyParser.urlencoded({
     extended: false
@@ -27,8 +38,14 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json());
 //Setting up Routers
 app.use('/users', userRoutes);
-app.use('/posts',postRoutes);
-app.use('/tags',tagRoutes);
+app.use('/posts', postRoutes);
+app.use('/tags', tagRoutes);
+
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/src/index.html'));
+});
+
 
 
 //Listen to port
