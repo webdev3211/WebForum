@@ -9,7 +9,42 @@ var verifyToken = require('../middleware/auth');
 var Post = require('../models/posts');
 
 var Tag = require('../models/tags');
+///pagination
+router.get('/p',(req,res,next)=>{
 
+    if(!req.query.page)
+    return res.status(501).json({
+        success:false,
+        message:"Invalid Page"
+    });
+    var page=parseInt(req.query.page);
+    var postPerPage=3;
+    Post.find({}, (err, posts) => {
+     if (err) {
+         res.status(501).json({
+             success: false,
+             message: err
+         })
+     } else {
+         if (!posts) {
+             res.json({
+                 success: false,
+                 message: 'No posts found'
+             })
+         } else {
+             res.status(200).json({
+                 success: true,
+                 posts: posts
+             })
+         }
+     }
+ }).populate('author', 'name').sort({ //show the latest post (descending order)
+     '_id': -1
+ }).populate('tag', 'tag').skip((page-1)*postPerPage).limit(postPerPage);
+ 
+ 
+ });
+ 
 
 /*================================================
 //Route for Searching 
