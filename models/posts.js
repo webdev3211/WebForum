@@ -5,7 +5,7 @@ var commentSchema = mongoose.Schema({
         required: true
     },
 
-    text: {
+    comment: {
         type: String,
         required: true
     },
@@ -55,23 +55,21 @@ var postSchema = mongoose.Schema({
 
     likedBy: {
         type: Array,
-        unique: true
+        // unique: true,
+        sparse: true
     },
 
     dislikedBy: {
         type: Array,
-        unique: true
-
+        // unique: true,
+        sparse: true
     },
 
     createdAt: {
         type: Date,
         default: Date.now
     },
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
+
     comments: [commentSchema]
 
 });

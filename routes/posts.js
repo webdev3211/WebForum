@@ -9,72 +9,81 @@ var verifyToken = require('../middleware/auth');
 var Post = require('../models/posts');
 
 var Tag = require('../models/tags');
-///pagination
-router.get('/p',(req,res,next)=>{
 
-    if(!req.query.page)
-    return res.status(501).json({
-        success:false,
-        message:"Invalid Page"
-    });
-    var page=parseInt(req.query.page);
-    var postPerPage=3;
+///pagination
+router.get('/p', (req, res, next) => {
+
+    if (!req.query.page)
+        return res.status(501).json({
+            success: false,
+            message: "Invalid Page"
+        });
+    var page = parseInt(req.query.page);
+    var postPerPage = 3;
     Post.find({}, (err, posts) => {
-     if (err) {
-         res.status(501).json({
-             success: false,
-             message: err
-         })
-     } else {
-         if (!posts) {
-             res.json({
-                 success: false,
-                 message: 'No posts found'
-             })
-         } else {
-             res.status(200).json({
-                 success: true,
-                 posts: posts
-             })
-         }
-     }
- }).populate('author', 'name').sort({ //show the latest post (descending order)
-     '_id': -1
- }).populate('tag', 'tag').skip((page-1)*postPerPage).limit(postPerPage);
- 
- 
- });
- 
+        if (err) {
+            res.status(501).json({
+                success: false,
+                message: err
+            })
+        } else {
+            if (!posts) {
+                res.json({
+                    success: false,
+                    message: 'No posts found'
+                })
+            } else {
+                res.status(200).json({
+                    success: true,
+                    posts: posts
+                })
+            }
+        }
+    }).populate('author', 'name').sort({ //show the latest post (descending order)
+        '_id': -1
+    }).populate('tag', 'tag').skip((page - 1) * postPerPage).limit(postPerPage);
+
+
+});
+
 
 /*================================================
 //Route for Searching 
 ==================================================*/
-router.post('/search',(req,res,next)=>{
-    var q=req.body.search;
-    console.info(q);
-   Post.find({content: { '$regex' : q, '$options' : 'i' }})
-           .then(data=>{
-               if(data.length===0)
-               return res.status(200).json({
-                   success:false,
-                   message:"No Result Found!"
-               })
-               res.status(200).json({
-                   success:true,
-                   data:data
-               });
-           })
-           .catch(err=>{
-               res.status(501).json({
-                   success:false,
-                   message:"Unable to find!"
-               });
-           });
+router.post('/search', (req, res, next) => {
+    var q = req.body.search;
+    if (!req.body.search) {
 
-   // console.log(req.query);
-  /*  res.status(200).json({
-        query:req.query
-    });*/
+    } else {
+        console.info(q);
+        Post.find({
+                content: {
+                    '$regex': q,
+                    '$options': 'i'
+                }
+            })
+            .then(data => {
+                if (data.length === 0)
+                    return res.status(200).json({
+                        success: false,
+                        message: "No Result Found!"
+                    })
+                res.status(200).json({
+                    success: true,
+                    data: data
+                });
+            })
+            .catch(err => {
+                res.status(501).json({
+                    success: false,
+                    message: "Unable to find!"
+                });
+            });
+    }
+    // console.log(req.query);
+    /*  res.status(200).json({
+          query:req.query
+      });*/
 
 });
 
@@ -121,15 +130,15 @@ router.get('/tags/:tagId', (req, res, next) => {
   1) Route to create comment
  ================================================== */
 
-router.post('/:postId/comment', verifyToken, (req, res, next) => {
-    Post.findById(req.params.postId).then(post => {
+router.post('/comment', verifyToken, (req, res, next) => {
+    Post.findById(req.body.id).then(post => {
         if (!post) {
             return res.status(501).json({
                 success: false,
                 message: "No post found"
             });
         } else {
-            if (!req.body.text) {
+            if (!req.body.comment) {
                 res.json({
                     success: false,
                     message: 'No comment provided'
@@ -137,14 +146,15 @@ router.post('/:postId/comment', verifyToken, (req, res, next) => {
             } else {
                 var comment = {
                     name: req.decoded.name,
-                    text: req.body.text,
+                    comment: req.body.comment,
                     commentator: req.decoded.userId
                 };
                 post.comments.push(comment);
                 post.save().then(data => {
                     res.status(501).json({
                         success: true,
-                        post: data
+                        post: data,
+                        message: 'Commented!!'
                     });
                 }).catch(err => {
                     res.status(501).json({
@@ -294,19 +304,18 @@ router.delete('/:postId/comment/:commentId', (req, res, next) => {
 
 
 
-
 /* ===============================================================
      LIKE  POST
   =============================================================== */
-router.post('/:postId/like', verifyToken, (req, res, next) => {
-    if (!req.params.postId) {
+router.put('/like', verifyToken, (req, res, next) => {
+    if (!req.body.id) {
         res.json({
             success: false,
             message: 'No id was provided.'
         });
     } else {
         Post.findOne({
-            _id: req.params.postId
+            _id: req.body.id
         }, (err, post) => {
             // Check if error was encountered
             if (err) {
@@ -394,9 +403,9 @@ router.post('/:postId/like', verifyToken, (req, res, next) => {
    DISLIKE  POST
 =============================================================== */
 
-router.post('/:postId/dislike', verifyToken, (req, res, next) => {
+router.put('/dislike', verifyToken, (req, res, next) => {
     // Check if id was provided inside the request body
-    if (!req.params.postId) {
+    if (!req.body.id) {
         res.json({
             success: false,
             message: 'No id was provided.'
@@ -404,7 +413,7 @@ router.post('/:postId/dislike', verifyToken, (req, res, next) => {
     } else {
         // Search database for  post using the id
         Post.findOne({
-            _id: req.params.postId
+            _id: req.body.id
         }, (err, post) => {
             // Check if error was found
             if (err) {
@@ -550,8 +559,7 @@ router.get('/:postId', (req, res) => {
                         })
                     } else {
                         res.status(200).json({
-                            message: 'holaaa',
-
+                            message: 'Voila',
                             success: true,
                             post: post
                         })
@@ -559,7 +567,7 @@ router.get('/:postId', (req, res) => {
 
                 }
             }
-        ).populate('tag', 'tag');
+        ).populate('author', 'name').populate('tag', 'tag');
     }
 });
 
@@ -622,20 +630,21 @@ router.post('/', verifyToken, (req, res) => {
 });
 
 
+
 /* ================================================
 // 4 Protected Route for Updating/Editing Posts
 ================================================== */
 
-router.put('/:postId', verifyToken, (req, res) => {
+router.put('/updateBlog', verifyToken, (req, res) => {
     //Not checked if author is trying to update anothers post id
-    if (!req.params.postId) {
+    if (!req.body._id) {
         res.json({
             success: false,
             message: 'No post is provided'
         })
     } else {
         Post.findOne({
-            _id: req.params.postId
+            _id: req.body._id
         }, (err, post) => {
             if (err) {
                 res.json({
@@ -651,7 +660,7 @@ router.put('/:postId', verifyToken, (req, res) => {
                 } else {
 
                     if (post.author._id == req.decoded.userId) {
-                        Post.findByIdAndUpdate(req.params.postId, req.body, {
+                        Post.findByIdAndUpdate(req.body._id, req.body, {
                                 new: true
                             })
                             .then(post => {
@@ -683,15 +692,15 @@ router.put('/:postId', verifyToken, (req, res) => {
 /* ================================================
 // 5 Proteted Route for Deletion of post specific post
 ================================================== */
-router.delete('/:postId', verifyToken, (req, res) => {
-    if (!req.params.postId) {
+router.delete('/deleteBlog/:id', verifyToken, (req, res) => {
+    if (!req.params.id) {
         res.json({
             success: false,
             message: 'No ID was provided'
         })
     } else {
         Post.findOne({
-            _id: req.params.postId
+            _id: req.params.id
         }, (err, post) => {
             if (err) {
                 res.json({
@@ -702,31 +711,47 @@ router.delete('/:postId', verifyToken, (req, res) => {
                 if (!post) {
                     res.json({
                         success: false,
-                        message: 'Post was not found'
+                        message: 'post was not found'
                     })
                 } else {
-
-                    if (post.author._id == req.decoded.userId) {
-                        Post.findOneAndDelete(req.params.postId)
-                            .then(post => {
-                                res.status(200).json({
-                                    success: true,
-                                    message: 'Post deleted successfully'
-                                })
+                    User.findOne({
+                        _id: req.decoded.userId
+                    }, (err, user) => {
+                        if (err) {
+                            res.json({
+                                success: false,
+                                message: err
                             })
-                            .catch(err => {
-                                res.status(501).json({
-                                    error: err,
-                                    message: 'Some error while deletion, please try again later'
-                                });
-                            });
-
-                    } else {
-                        res.status(501).json({
-                            message: "You are not authorized to update this post",
-                            success: false
-                        })
-                    }
+                        } else {
+                            if (!user) {
+                                res.json({
+                                    success: false,
+                                    message: 'Unable to authenticate user'
+                                })
+                            } else {
+                                if (req.decoded.userId != post.author._id) {
+                                    res.json({
+                                        success: false,
+                                        message: 'You are not authorized to delete this post'
+                                    })
+                                } else {
+                                    post.remove((err) => {
+                                        if (err) {
+                                            res.json({
+                                                success: false,
+                                                message: err
+                                            })
+                                        } else {
+                                            res.json({
+                                                success: true,
+                                                message: 'post deleted'
+                                            })
+                                        }
+                                    });
+                                }
+                            }
+                        }
+                    });
                 }
             }
         });

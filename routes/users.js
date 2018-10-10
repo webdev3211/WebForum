@@ -11,6 +11,32 @@ var crypto = require("crypto");
 
 
 /*==============================================
+//LIST ALL USERS
+===============================================*/
+router.get('/allusers', (req, res, next) => {
+    User.find({}).select('name email').then(
+        (data) => {
+            if (!data)
+                return res.status(501).json({
+                    success: false,
+                    message: "No users found!"
+                });
+            res.status(200).json({
+                success: true,
+                data: data
+            });
+
+        }
+    ).catch((err) => {
+        res.status(501).json({
+            success: false,
+            message: "Unable to Find Users"
+        });
+    });
+});
+
+
+/*==============================================
 //SHOW MY OWN POSTS ROUTE
 ===============================================*/
 router.get('/myposts', verifyToken, (req, res) => {

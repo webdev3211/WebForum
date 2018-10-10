@@ -1,7 +1,76 @@
 <app-navbar></app-navbar>
 
-
-<div class="container">
-  <flash-messages></flash-messages>
-  <router-outlet></router-outlet>
+<div class="col-md-2" id="leftdiv">
+  <app-sidebar></app-sidebar>
 </div>
+
+<div class="vr">&nbsp;</div>
+
+
+<div class="col-md-7" id="centerdiv">
+  <flash-messages></flash-messages>
+  <router-outlet>
+
+  </router-outlet>
+
+</div>
+
+<div class="col-md-3" id="rightdiv">
+
+  <div class="panel-group" id="howtoask">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="background: #f7f1d5">How to Ask
+      </div>
+      <div class="panel-body" style="background: #f7e7ce;">
+        <b>Is your question about programming?</b>
+        <br>
+        <br> We prefer questions that can be answered, not just discussed. Provide details. Share your research.
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="panel-group" id="howtoformat">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="background: #f7f1d5">How to Format
+      </div>
+      <div class="panel-body" style="background: #f7e7ce;">
+        <p> ► put returns between paragraphs
+          <p> ► for linebreak add 2 spaces at end
+            <p> ► _italic_ or **bold**
+              <p> ► indent code by 4 spaces
+
+                <p> ► backtick escapes `like _so_`
+                  <p> ► quote by placing > at start of line
+                    <p> ► to make links
+
+                      <http://foo.com>
+                        [foo](http://foo.com)
+                        <a href="http://foo.com">foo</a>
+
+                        <br> ► basic HTML also allowed
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+<style>
+  .vr {
+    margin-left: 35px;
+    width: 2px;
+    background-color: grey;
+    position: absolute;
+    top: 55px;
+    bottom: 0;
+    left: 175px;
+    height: 1500px;
+    size: 500;
+  }
+
+</style>

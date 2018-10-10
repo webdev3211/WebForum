@@ -5,6 +5,11 @@ var tagSchema = mongoose.Schema({
         type: String,
         required: true,
         // ref: 'Post'
+    },
+
+    description: {
+        type: String,
+        required: true
     }
 });
 
