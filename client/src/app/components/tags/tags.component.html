@@ -1,0 +1,75 @@
+<div style="margin-left: 15px;">
+  <h1>
+    Tags
+  </h1>
+  <br>
+  <div class="define">
+    A tag is a keyword or label that categorizes your question with other, similar questions. Using the right tags makes it easier
+    for others to find and answer your question.
+  </div>
+
+  <br>
+  <br>
+  <div id="content">
+    <div *ngFor="let tag of alltags" style="border-bottom: 2px solid grey; box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);">
+
+      <div style="margin:0; padding:0;">
+        <span id="title" style="width: 10px;">
+          {{ tag.tag }}
+        </span>
+
+        <p>
+          {{ tag.description }}
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div style="margin: 100px;">
+
+  </div>
+
+</div>
+
+
+
+
+<style>
+  #content div {
+    padding: 30px;
+    /* margin: 10px; */
+  }
+
+  #content div:hover {
+    background: #f2f2f2;
+  }
+
+  #content {
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-auto-rows: minmax(110px, auto);
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    /* max-width: 20px; */
+  }
+
+
+  #title {
+
+    color: #39739d;
+    background-color: #E1ECF4;
+    border-color: #E1ECF4;
+    margin-bottom: 15px;
+  }
+
+  #title:hover {
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+</style>

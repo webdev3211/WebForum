@@ -4,6 +4,9 @@ import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 import { AuthGuard } from '../../guards/auth.guard';
 
+declare var $: any;
+
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -100,6 +103,13 @@ export class LoginComponent implements OnInit {
       this.previousUrl = this.authGuard.redirectUrl;
       this.authGuard.redirectUrl = undefined;
     }
+
+    $(document).ready(function(){
+     $('#rightdiv').hide();
+     $('#leftdiv').hide();
+     $(".vr").hide();
+      $('#centerdiv').removeClass('col-md-7').addClass('col-md-12');
+  });
 
   }
 

@@ -8,6 +8,62 @@ var Post = require('../models/posts');
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
+var multer=require('multer');
+var storage = multer.diskStorage({
+    destination:function (req, file, cb) {
+        cb(null,'uploads/')
+      },
+    filename: function (req, file, cb) {
+      cb(null, Date.now()+'-'+file.originalname);
+    }
+  });
+   
+var upload = multer({ storage: storage });
+
+/*==============================================
+//EDIT PROFILE AND UPLOAD IMAGE
+===============================================*/
+router.post('/profile/:id',upload.single('image'),(req,res,next)=>{
+             
+    if(req.file)
+    req.body.image=req.file.filename;
+    //req.decoded.userId
+    User.findByIdAndUpdate(req.params.id,req.body,{new:true})
+        .then(data=>{
+            res.status(200).json(data);
+        })
+        .catch(err=>{
+            res.status(501).json({
+                success:false,
+                message:"Unable to Update"
+            });
+        });
+});
+
+/*==============================================
+//LIST ALL USERS
+===============================================*/
+router.get('/allusers', (req, res, next) => {
+    User.find({}).select('name email').then(
+        (data) => {
+            if (!data)
+                return res.status(501).json({
+                    success: false,
+                    message: "No users found!"
+                });
+            res.status(200).json({
+                success: true,
+                data: data
+            });
+
+        }
+    ).catch((err) => {
+        res.status(501).json({
+            success: false,
+            message: "Unable to Find Users"
+        });
+    });
+});
 
 
 /*==============================================

@@ -12,6 +12,13 @@ import { ProfileComponent } from './components/profile/profile.component';
 
 import { AuthGuard } from './guards/auth.guard';
 import { NotAuthGuard } from './guards/notauth.guard';
+import { TagsComponent } from './components/tags/tags.component';
+import { UsersComponent } from './components/users/users.component';
+import { PostComponent } from './components/post/post.component';
+import { SinglePostComponent } from './components/post/single-post/single-post.component';
+import { DeletePostComponent } from './components/post/delete-post/delete-post.component';
+import { EditPostComponent } from './components/post/edit-post/edit-post.component';
+
 
 const appRoutes: Routes = [
     {
@@ -35,9 +42,40 @@ const appRoutes: Routes = [
     },
 
     {
+        path: 'tags',
+        component: TagsComponent
+
+    },
+    {
+        path: 'users',
+        component: UsersComponent
+
+    },
+    {
+        path: 'posts',
+        component: PostComponent,
+        canActivate: [AuthGuard]
+
+    },
+    {
+        path: 'singlePost/:id',
+        component: SinglePostComponent
+    },
+    {
+        path: 'edit-post/:id',
+        component: EditPostComponent,
+        canActivate: [AuthGuard]
+    },
+    {
+        path: 'delete-post',
+        component: DeletePostComponent,
+        canActivate: [AuthGuard]
+    },
+    {
         path: '*',
         component: HomeComponent
-    },
+
+    }
 
 
 ];
