@@ -1,120 +1,159 @@
 <!-- Fixed navbar -->
 <nav class="navbar navbar-inverse" style="background:#3B5998; font-weight: bold; color:white; height: 17px;">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
-        aria-controls="navbar">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <a class="navbar-brand" routerLink="/" style="font-family: Satisfy; height: 12px; background:#3B5998; color:white;">WebDev</a>
-    </div>
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-left">
-        <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
-          <a routerLink="/" style="color:white;">Home</a>
-        </li>
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+          aria-controls="navbar">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" routerLink="/" style="font-family: Satisfy; height: 12px; background:#3B5998; color:white;">WebDev</a>
+      </div>
+      <div id="navbar" class="navbar-collapse collapse">
+        <ul class="nav navbar-nav navbar-left">
+          <li [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}">
+            <a routerLink="/" style="color:white;">Home  </a>
+          </li>
 
-        <li style="margin-top: 7px; width: 370px;">
-             
   
-          <input type="text" class="form-control" autocomplete="off" placeholder="Search" name="search" style="margin-left: 70px; width: 100%;" />
+          <li style="margin-top: 7px; margin-left: 38px; width: 370px;" class="top-left links">
+              
+              <!-- (keydown)="search($event)" -->
+              <!-- (keyup)="onKey($event)" -->
+            <input #box (keyup)="onEnter(box.value)" id="searchbar" type="text" class="form-control"  autocomplete="off" placeholder="Search" name="search" style="margin-left: 70px; width: 500px;" />
+            <div *ngIf="box.value.length>0">
+                <div *ngIf="searchResults.length" class="panel-footer" style="position:relative; z-index:1000;   border:1px solid #ccc;
+                background:#fff;">
+                
+                    <ul *ngFor="let result of searchResults" style="list-style-type:none;">
+                        <li id="searchlist"> 
+                            <a routerLink="singlePost/{{ result._id }}" style="text-decoration:none;">
 
-          <div class="input-group-btn" style="position:relative; top:-34.2px; right: -72px; border:none; float:right;">
-            <button class="btn btn-default" type="submit" >
-              <i class="glyphicon glyphicon-search"></i>
-            </button>
-          </div>
+                            <b style="color:grey;">{{result.title}} </b>
 
-        </li>
+                          </a>
+                        </li>
+                    </ul>
+                </div>
 
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <!-- <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/dashboard">Dashboard</a></li> -->
-        <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style=" height: 8px;background:#3B5998; color:white;">
-
-          <li *ngIf="authService.loggedIn()" class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="height: 50px;">
-              <i class="fa fa-globe fa-2x" aria-hidden="true"></i>
-
-              <span class="badge" style="background:red; position: relative; top: -15px; left:-10px">
-                0
-              </span>
-            </a>
+            </div>
+            
+        
+                
+            <!-- <div class="input-group-btn"  style="position:relative; top:-34.2px; right: -72px; border:none; float:right;">
+              <button class="btn btn-default" type="submit" >
+                <i class="glyphicon glyphicon-search"></i>
+              </button>
+            </div> -->
+  
           </li>
+  
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <!-- <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/dashboard">Dashboard</a></li> -->
+          <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style=" height: 8px;background:#3B5998; color:white;">
+  
+            <li *ngIf="authService.loggedIn()" class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="height: 50px;">
+                <i class="fa fa-globe fa-2x" aria-hidden="true"></i>
+  
+                <span class="badge" style="background:red; position: relative; top: -15px; left:-10px">
+                  0
+                </span>
+              </a>
+            </li>
 
-          <li *ngIf="authService.loggedIn()" class="dropdown">
-            <a href="#" style="color:white;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="height: 50px; color:white;">
-              <img src="https://image.ibb.co/b0m3QT/default_avatar.png" width="30px" height="30px" class="img-circle" />
-
-              <span style="margin-left:15px;" class="caret"></span>
-            </a>
-
-
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <a routerLink="/profile"> Profile </a>
-              </li>
-              <li role="separator" class="divider"></li>
-
-              <li>
-
-                <a href="#"> Edit Profile </a>
-              </li>
-              <li role="separator" class="divider"></li>
-              <li *ngIf="authService.loggedIn()">
-                <a href="#" (click)="onLogoutClick()">Logout</a>
-              </li>
-
-            </ul>
-          </li>
-
-
-
-          <!-- <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/blog">Blog</a></li> -->
-          <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style="height: 8px; background:#3B5998; color:white;">
-            <a routerLink="/login" style="color:white;">Login</a>
-          </li>
-
-
-          <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style="height: 8px; background:#3B5998; color:white;">
-            <a routerLink="/register" style="color:white;">Register</a>
-          </li>
-      </ul>
+            <li>
+              
+            </li>
+  
+            <li *ngIf="authService.loggedIn()" class="dropdown">
+              <a href="#" style="color:white;" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" style="height: 50px; color:white;">
+                <img src="https://image.ibb.co/b0m3QT/default_avatar.png" width="30px" height="30px" class="img-circle" />
+  
+                <span style="margin-left:15px;" class="caret"></span>
+              </a>
+  
+  
+              <ul class="dropdown-menu" role="menu">
+                <li>
+                  <a routerLink="/profile"> Profile </a>
+                </li>
+                <li role="separator" class="divider"></li>
+  
+                <li>
+  
+                  <a href="#"> Edit Profile </a>
+                </li>
+                <li role="separator" class="divider"></li>
+                <li *ngIf="authService.loggedIn()">
+                  <a href="#" (click)="onLogoutClick()">Logout</a>
+                </li>
+  
+              </ul>
+            </li>
+  
+  
+  
+            <!-- <li *ngIf="authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}"><a routerLink="/blog">Blog</a></li> -->
+            <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style="height: 8px; background:#3B5998; color:white;">
+              <a routerLink="/login" style="color:white;">Login</a>
+            </li>
+  
+  
+            <li *ngIf="!authService.loggedIn()" [routerLinkActive]="['active']" [routerLinkActiveOptions]="{exact:true}" style="height: 8px; background:#3B5998; color:white;">
+              <a routerLink="/register" style="color:white;">Register</a>
+            </li>
+        </ul>
+      </div>
+      <!--/.nav-collapse -->
     </div>
-    <!--/.nav-collapse -->
+  </nav>
+  <div class="clearfix">
+  
   </div>
-</nav>
-<div class="clearfix">
-
-</div>
 
 
+  
+  
+  
+  <style>
+    #nav-item {
+      color: white;
+    }
+    #nav-item:hover {
+      background: #4267b2;
+    }
+    .navbar {
+      /* border: none; */
+      border-top: 0.9px solid blue;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
+    .navbar:hover {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    }
 
-<style>
-  #nav-item {
-    color: white;
-  }
 
-  #nav-item:hover {
-    background: #4267b2;
+.top-left {
+position: absolute;
+width:40%
+}
 
-  }
+.links {
+  color: #636b6f;
+padding: 0 25px;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: .1rem;
+text-decoration: none;
+}
 
-  .navbar {
-    /* border: none; */
-    border-top: 0.9px solid blue;
-    border-bottom: none;
-    border-left: none;
-    border-right: none;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  }
 
-  .navbar:hover {
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 
-  }
-
-</style>
+  </style>
+  

@@ -14,6 +14,92 @@
   </router-outlet>
 
 </div>
+<br>
+
+<div class="col-md-3" id="rightsidebar">
+  <img src="https://s0.2mdn.net/simgad/14022543625918781205" style="margin-left: 45px;">
+  <br>
+  <br>
+  <div class="panel-group" style="margin-left: 45px;">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">Most Trending Posts</div>
+      <div class="panel-body" style="height: 360px;">Nothing here now...</div>
+    </div>
+  </div>
+  <br>
+  <br>
+
+  <div style="margin-left: 45px;" id="hot-network-questions" class="module tex2jax_ignore">
+    <h4>
+      <a href="https://stackexchange.com/questions?tab=hot" class="js-gps-track s-link s-link__inherit" data-gps-track="posts_hot_network.click({ item_type:1, location:8 })">
+        <b>Sample Hot Network Questions</b>
+      </a>
+    </h4>
+    <ul>
+      <li>
+        <div class="favicon favicon-hinduism" title="Hinduism Stack Exchange"></div>
+        <a href="https://hinduism.stackexchange.com/questions/29449/what-is-the-difference-between-prayer-and-worship" class="js-gps-track question-hyperlink mb0"
+          data-gps-track="site.switch({ item_type:8, target_site:567 }); posts_hot_network.click({ item_type:2, location:8 })">
+          What is the difference between prayer and worship?
+        </a>
+
+      </li>
+      <li>
+        <div class="favicon favicon-rpg" title="Role-playing Games Stack Exchange"></div>
+        <a href="https://rpg.stackexchange.com/questions/133490/what-type-of-stone-do-targets-of-flesh-to-stone-and-petrification-turn-into"
+          class="js-gps-track question-hyperlink mb0" data-gps-track="site.switch({ item_type:8, target_site:122 }); posts_hot_network.click({ item_type:2, location:8 })">
+          What type of stone do targets of Flesh to Stone, and Petrification, turn into?
+        </a>
+
+      </li>
+      <li>
+        <div class="favicon favicon-travel" title="Travel Stack Exchange"></div>
+        <a href="https://travel.stackexchange.com/questions/123816/can-i-eat-only-a-cr%c3%a8me-br%c3%bbl%c3%a9e-in-paris" class="js-gps-track question-hyperlink mb0"
+          data-gps-track="site.switch({ item_type:8, target_site:273 }); posts_hot_network.click({ item_type:2, location:8 })">
+          Can I eat only a crème brûlée in Paris?
+        </a>
+
+        <li class="dno js-hidden" style="display: list-item;">
+          <div class="favicon favicon-mathoverflow" title="MathOverflow"></div>
+          <a href="https://mathoverflow.net/questions/312679/counting-configurations-on-a-2xn-board-under-restrictions" class="js-gps-track question-hyperlink mb0"
+            data-gps-track="site.switch({ item_type:8, target_site:504 }); posts_hot_network.click({ item_type:2, location:8 })">
+            Counting configurations on a 2xn board under restrictions
+          </a>
+
+        </li>
+        <li class="dno js-hidden" style="display: list-item;">
+          <div class="favicon favicon-ell" title="English Language Learners Stack Exchange"></div>
+          <a href="https://ell.stackexchange.com/questions/182403/does-fastener-include-screw" class="js-gps-track question-hyperlink mb0"
+            data-gps-track="site.switch({ item_type:8, target_site:481 }); posts_hot_network.click({ item_type:2, location:8 })">
+            Does "fastener" include "screw"?
+          </a>
+
+        </li>
+        <li class="dno js-hidden" style="display: list-item;">
+          <div class="favicon favicon-puzzling" title="Puzzling Stack Exchange"></div>
+          <a href="https://puzzling.stackexchange.com/questions/73819/how-much-do-you-know-about-the-internet" class="js-gps-track question-hyperlink mb0"
+            data-gps-track="site.switch({ item_type:8, target_site:559 }); posts_hot_network.click({ item_type:2, location:8 })">
+            How much do you know about the internet?
+          </a>
+
+        </li>
+    </ul>
+
+
+  </div>
+  <br>
+
+</div>
+
+
+<footer class="footer">
+  <div class="container">
+    <a routerLink="/developers" style="text-decoration:none; cursor: pointer;">
+      <p class="text-muted">&copy; Copyright 2018 | WebDev Community</p>
+    </a>
+  </div>
+</footer>
+
 
 <div class="col-md-3" id="rightdiv">
 
@@ -60,6 +146,7 @@
 
 
 
+
 <style>
   .vr {
     margin-left: 35px;
@@ -69,8 +156,17 @@
     top: 55px;
     bottom: 0;
     left: 175px;
-    height: 1500px;
+    /* height: 2500px; */
+    height: 100%;
     size: 500;
+  }
+
+  #rightsidebar {
+    user-select: none;
+  }
+
+  #hot-network-questions {
+    font-size: 1.1em;
   }
 
 </style>

@@ -42,6 +42,8 @@ import { PostComponent } from './components/post/post.component';
 import { EditPostComponent } from './components/post/edit-post/edit-post.component';
 import { DeletePostComponent } from './components/post/delete-post/delete-post.component';
 import { SinglePostComponent } from './components/post/single-post/single-post.component';
+import { DevelopersComponent } from './components/developers/developers.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
 
 
 
@@ -60,6 +62,8 @@ import { SinglePostComponent } from './components/post/single-post/single-post.c
     EditPostComponent,
     DeletePostComponent,
     SinglePostComponent,
+    DevelopersComponent,
+    NotfoundComponent,
   ],
   imports: [
 

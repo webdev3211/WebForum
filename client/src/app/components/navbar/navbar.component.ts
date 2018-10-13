@@ -15,22 +15,58 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 })
 export class NavbarComponent implements OnInit {
 
-  sform;
- searchResults;
+  searchingfor = '';
+  searchResults;
+  sForm;
+  value = '';
 
   constructor(
-    private formBuilder: FormBuilder,
+    private formBuilder: FormBuilder, 
     private postService: PostService,
-    private tagsService: TagsService,
 
     public authService: AuthService,
     private router: Router,
     private flashMessage: FlashMessagesService
   ) {
-
+   
+    
    }
 
+   onEnter(value: string) { 
+     this.searchingfor = value;
 
+     const searchh = {
+       search: this.searchingfor
+     }
+    this.postService.searching(searchh).subscribe(data => {
+        this.searchResults = data.data;
+    });
+ 
+   }
+   
+  //  search($event: any){
+  //  this.searchingfor = $event.target.value;
+
+  //  if($event.key == 13)
+  //   // this.postService.searching('moment').subscribe(data => {
+  //   //   this.searchResults = data.data
+  //   // })
+
+  //  }
+
+   
+
+   
+  //  onKey(event: any) { // without type info
+   
+  //   // Create blog object from form fields
+  //   const searchh = {
+  //     search: this.form.get('search').value, // Title field
+  //   }
+  //   this.postService.search(searchh).subscribe(data => {
+  //     this.searchResults = data;
+  //   }); 
+  // }
 
 
   onLogoutClick() {
@@ -46,6 +82,5 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  
 
 }

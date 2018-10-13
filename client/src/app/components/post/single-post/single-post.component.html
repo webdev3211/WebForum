@@ -5,6 +5,15 @@
 </div>
 
 
+
+
+<img src="https://tpc.googlesyndication.com/simgad/10464256763402806218" alt="">
+
+
+
+
+<br>
+
 <h3>
   <b>{{ blog.title }}</b>
   <br>
@@ -22,9 +31,22 @@
         <span class="glyphicon glyphicon-trash"></span>
       </button>
     </a>
+    <br>
+
+    <br>
+    <br>
+  </div>
+
+  <div class="pull-left clearfix">
+
+    <span style="color: grey; font-size: 0.6em;">
+      Viewed {{ blog.viewcount }} times
+    </span>
 
   </div>
+
 </h3>
+
 
 <br>
 <hr>
@@ -48,12 +70,13 @@
 
 
   <div class="col-md-10">
-    <p id="blog-content">
-
-      {{ blog.content }}
-
-
-    </p>
+    <!-- <p id="blog-content"> -->
+    <pre class="prettify" id="blog-content">
+        <code class="html hljs-attribute" style="text-indent:40px;">
+          {{ blog.content }}
+        </code>
+      </pre>
+    <!-- </p> -->
     <br>
     <br>
     <div>
@@ -84,7 +107,7 @@
   <ul class="list-group">
     <li class="list-group-item">
       <button type="button" style="outline:none;" name="button" class="btn btn-sm btn-default" (click)="draftComment(blog._id)">
-        add comment
+        Post your Answer
       </button>
       <br>
       <br>
@@ -114,12 +137,20 @@
 
   <div>
     <ul *ngFor="let comment of blog.comments">
-      <li style="padding: 5px 10px; margin-right: 15px; border: 0.5px solid #f0f0f0; border-left: 14px solid tomato; margin-left: 15px;"
+
+      <img class="pull-left img-circle clearfix" style="margin-right: 15px;margin-top: 20px; margin-left: -35px; user-select: none;"
+        src="https://image.ibb.co/b0m3QT/default_avatar.png" height="25px" weight="25px" />
+      <span style="color:#f1f1f1; position: absolute; margin-top: 20px; margin-left: -15px; user-select: none;"> ------ </span>
+
+      <li style=" padding: 5px 10px; margin-right: 15px; border: 0.5px solid #f0f0f0; border-left: 14px solid tomato; margin-left: 15px;"
         class="list-group-item">
+
         <strong style="color: gray;">{{ comment.name }} </strong>
         <span style="color:gray;" class="pull-right clearfix"> {{ comment.createdAt | amTimeAgo }} </span>
         <br>
+        <br>
         <br> {{ comment.comment }}
+        <br>
         <br>
 
       </li>
@@ -131,13 +162,17 @@
 
 </div>
 
+<div style="margin-bottom: 280px;">
+
+</div>
+
 
 
 
 <style>
   #blog-content {
-    font-size: 1.2em;
-    line-height: 30px;
+    font-size: 1em;
+    line-height: 20px;
   }
 
 

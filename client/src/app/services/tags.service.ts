@@ -40,4 +40,9 @@ export class TagsService {
 
 
 
+  tagsrelatedwithpostcount(tagid) {
+    return this.http.get(this.domain + 'posts/tags/count' + tagid, this.options).map(res => res.json());
+  }
+
+
 }

@@ -30,20 +30,23 @@ export class PostComponent implements OnInit {
   enabledComments = [];
   tags;
 
+
+
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private postService: PostService,
     private tagsService: TagsService,
     private router: Router,
-    
+
 
 
   ) {
     this.createNewBlogForm();
     $("howtoask").show();
-      $("howtoformat").show();
-  
+    $("howtoformat").show();
+    $("#rightsidebar").hide();
+
   }
 
 
@@ -94,10 +97,12 @@ export class PostComponent implements OnInit {
     // Create blog object from form fields
     const blog = {
       title: this.form.get('title').value, // Title field
-      content: this.form.get('content').value, // content field
+      content: `\n` + this.form.get('content').value, // content field
       tag: this.tagselected
       // author: this.logedinuserid 
     }
+
+
 
     this.postService.newBlog(blog).subscribe(data => {
       if (!data.success) {
@@ -114,7 +119,9 @@ export class PostComponent implements OnInit {
             this.processing = false;
             this.message = false;
             this.form.reset();
-            this.router.navigate(['/']);            
+            this.router.navigate(['/']);
+            this.enableFormNewBlogForm();
+
           }, 2000);
 
       }
@@ -126,14 +133,25 @@ export class PostComponent implements OnInit {
     window.location.reload(); // Clear all variable states
   }
 
- 
+
 
 
 
   ngOnInit() {
-      $("howtoask").show();
-      $("howtoformat").show();
-  
+
+    $("#howtoask").show();
+    $("#howtoformat").show();
+
+    $(document).ready(function () {
+      $(window).scrollTop(0);
+      $("#rightsidebar").hide();
+
+      $('#rightdiv').show();
+      $('#leftdiv').show();
+      $(".vr").show();
+      $('#centerdiv').removeClass('col-md-12').addClass('col-md-7');
+    });
+
     this.getAlltagsList();
     this.authService.getProfile().subscribe(profile => {
       this.name = profile.user.name;

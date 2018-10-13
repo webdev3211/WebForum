@@ -171,6 +171,16 @@ export class SinglePostComponent implements OnInit {
     $("#howtoask").hide();
     $("#howtoformat").hide();
 
+    $(document).ready(function () {
+      $(window).scrollTop(0);
+      $('#rightdiv').show();
+      $('#leftdiv').show();
+      $(".vr").show();
+      $('#centerdiv').removeClass('col-md-12').addClass('col-md-7');
+      $("#rightsidebar").show();
+
+    });
+
     this.showPost();
 
     this.authService.getProfile().subscribe(profile => {
