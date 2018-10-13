@@ -4,6 +4,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
+declare var $: any;
+
+
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -63,11 +66,11 @@ export class RegisterComponent implements OnInit {
       ])],
 
       // Name Input
-      name: ['',  Validators.required], // Field is required
-  
+      name: ['', Validators.required], // Field is required
+
       // Password Input
-      password:  ['',  Validators.required],
-      
+      password: ['', Validators.required],
+
       // Confirm Password Input
       confirm: ['', Validators.required] // Field is required
     },
@@ -75,21 +78,21 @@ export class RegisterComponent implements OnInit {
   };
 
 
-    // Function to disable the registration form
-    disableForm() {
-      this.form.controls['email'].disable();
-      this.form.controls['name'].disable();
-      this.form.controls['password'].disable();
-      this.form.controls['confirm'].disable();
-    }
-  
-    // Function to enable the registration form
-    enableForm() {
-      this.form.controls['email'].enable();
-      this.form.controls['name'].enable();
-      this.form.controls['password'].enable();
-      this.form.controls['confirm'].enable();
-    }
+  // Function to disable the registration form
+  disableForm() {
+    this.form.controls['email'].disable();
+    this.form.controls['name'].disable();
+    this.form.controls['password'].disable();
+    this.form.controls['confirm'].disable();
+  }
+
+  // Function to enable the registration form
+  enableForm() {
+    this.form.controls['email'].enable();
+    this.form.controls['name'].enable();
+    this.form.controls['password'].enable();
+    this.form.controls['confirm'].enable();
+  }
 
 
 
@@ -126,6 +129,16 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    $(document).ready(function () {
+      $("#rightsidebar").hide();
+
+      $('#rightdiv').hide();
+      $('#leftdiv').hide();
+      $(".vr").hide();
+      $('#centerdiv').removeClass('col-md-7').addClass('col-md-12');
+    });
+
   }
 
 

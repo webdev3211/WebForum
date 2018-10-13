@@ -1,4 +1,7 @@
 var mongoose = require('mongoose');
+var mongoosePaginate = require('mongoose-paginate');
+
+
 var commentSchema = mongoose.Schema({
     name: {
         type: String,
@@ -69,9 +72,15 @@ var postSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    viewcount: {
+        type: Number,
+        default: 0
+    },
 
     comments: [commentSchema]
 
 });
+
+postSchema.plugin(mongoosePaginate);
 
 module.exports = mongoose.model('Post', postSchema);

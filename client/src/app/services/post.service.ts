@@ -31,12 +31,12 @@ export class PostService {
 
   newBlog(blog) {
     this.createAuthenticationHeaders();
-    return this.http.post(this.domain + 'posts/', blog, this.options).map(res => res.json())
+    return this.http.post(this.domain + 'posts/createPost', blog, this.options).map(res => res.json())
   }
 
-  get_AllBlogs() {
+  get_AllBlogs(oPosts) {
     this.createAuthenticationHeaders();
-    return this.http.get(this.domain + 'posts/', this.options).map(res => res.json());
+    return this.http.post(this.domain + 'posts/', JSON.stringify(oPosts), this.options).map(res => res.json());
   }
 
   // Function to get the post using the id
@@ -80,10 +80,9 @@ export class PostService {
   }
 
 
-
-  search(searchquery) {
-    this.createAuthenticationHeaders();
-    return this.http.post(this.domain + 'posts/search/', searchquery, this.options).map(res => res.json())
+  searching(searchquery) {
+    // this.createAuthenticationHeaders();
+    return this.http.post(this.domain + 'posts/search', searchquery, this.options).map(res => res.json())
 
   }
 

@@ -27,6 +27,8 @@ export class LoginComponent implements OnInit {
     private authGuard: AuthGuard
   ) {
     this.createForm();
+    $("#rightsidebar").hide();
+
   }
 
 
@@ -104,12 +106,14 @@ export class LoginComponent implements OnInit {
       this.authGuard.redirectUrl = undefined;
     }
 
-    $(document).ready(function(){
-     $('#rightdiv').hide();
-     $('#leftdiv').hide();
-     $(".vr").hide();
+    $(document).ready(function () {
+      $("#rightsidebar").hide();
+
+      $('#rightdiv').hide();
+      $('#leftdiv').hide();
+      $(".vr").hide();
       $('#centerdiv').removeClass('col-md-7').addClass('col-md-12');
-  });
+    });
 
   }
 

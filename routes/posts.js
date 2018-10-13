@@ -10,41 +10,7 @@ var Post = require('../models/posts');
 
 var Tag = require('../models/tags');
 
-///pagination
-router.get('/p', (req, res, next) => {
 
-    if (!req.query.page)
-        return res.status(501).json({
-            success: false,
-            message: "Invalid Page"
-        });
-    var page = parseInt(req.query.page);
-    var postPerPage = 3;
-    Post.find({}, (err, posts) => {
-        if (err) {
-            res.status(501).json({
-                success: false,
-                message: err
-            })
-        } else {
-            if (!posts) {
-                res.json({
-                    success: false,
-                    message: 'No posts found'
-                })
-            } else {
-                res.status(200).json({
-                    success: true,
-                    posts: posts
-                })
-            }
-        }
-    }).populate('author', 'name').sort({ //show the latest post (descending order)
-        '_id': -1
-    }).populate('tag', 'tag').skip((page - 1) * postPerPage).limit(postPerPage);
-
-
-});
 
 
 /*================================================
@@ -55,13 +21,13 @@ router.post('/search', (req, res, next) => {
     if (!req.body.search) {
 
     } else {
-        console.info(q);
+        // console.info(q);
         Post.find({
-                content: {
+                title: {
                     '$regex': q,
                     '$options': 'i'
                 }
-            })
+            }).select('title')
             .then(data => {
                 if (data.length === 0)
                     return res.status(200).json({
@@ -123,6 +89,46 @@ router.get('/tags/:tagId', (req, res, next) => {
             );
     }
 });
+
+/* ================================================
+//Route to send count of posts related with this tag
+================================================== */
+
+
+router.get('/tags/count/:tagId', (req, res, next) => {
+
+    if (!req.params.tagId)
+        return res.status(501).json({
+            success: false,
+            message: "No tag provided"
+        });
+    else {
+        Post.find({
+                tag: req.params.tagId
+            })
+            .then(data => {
+                if (!data)
+                    return res.status(501).json({
+                        success: false,
+                        message: "No Data"
+                    });
+
+                res.status(200).json({
+                    success: true,
+                    count: data.length
+                });
+            }).catch(
+                err => {
+                    res.status(501).json({
+                        success: false,
+                        message: "Unable to fetch post related with this tag"
+                    });
+                }
+            );
+    }
+});
+
+
 
 //ALL COMMENTS ROUTES
 
@@ -506,7 +512,23 @@ router.put('/dislike', verifyToken, (req, res, next) => {
 //1 Public post router to fetch all posts on the database
 ================================================== */
 
-router.get('/', (req, res) => {
+router.post('/', (req, res) => {
+
+    let limit = parseInt(req.query.limit);
+    let page = parseInt(req.body.page || req.query.page);
+    // let query = {};
+
+    if (!limit || limit < 1) {
+        limit = 10;
+    }
+
+    if (!page || page < 1) {
+        page = 1;
+    }
+
+
+    var offset = (page - 1) * limit;
+
 
     Post.find({}, (err, posts) => {
         if (err) {
@@ -521,15 +543,55 @@ router.get('/', (req, res) => {
                     message: 'No posts found'
                 })
             } else {
-                res.status(200).json({
-                    success: true,
-                    posts: posts
-                })
+
+                // Post.count(query, function (err, count) {
+                //     if (count > offset) {
+                //         offset = 0;
+                //     }
+                // });
+
+                var query = Post.find({});
+
+                // .populate([
+                //     // here array is for our memory. 
+                //     // because may need to populate multiple things
+                //     {
+                //         path: 'author',
+                //         select: 'name',
+                //         model: 'Post',
+                //     },
+                //     {
+                //         path: 'Tag',
+                //         select: 'tag',
+                //         model: 'Tag',
+                //     }
+                // ]);
+
+
+
+                var options = {
+                    sort: {
+                        _id: -1
+                    },
+                    offset: offset,
+                    limit: limit,
+                    lean: true,
+                    populate: ['tag', 'author'],
+                    model: ['Tag', 'User'],
+                };
+
+
+
+
+                Post.paginate(query, options, (function (err, posts) {
+                    res.status(201).json({
+                        success: true,
+                        posts: posts
+                    });
+                }));
             }
         }
-    }).populate('author', 'name').sort({ //show the latest post (descending order)
-        '_id': -1
-    }).populate('tag', 'tag');
+    })
 });
 
 /* =================================================
@@ -558,6 +620,8 @@ router.get('/:postId', (req, res) => {
                             message: 'Post Not Found'
                         })
                     } else {
+                        // post.viewcount++;
+                        // post.save();
                         res.status(200).json({
                             message: 'Voila',
                             success: true,
@@ -575,7 +639,7 @@ router.get('/:postId', (req, res) => {
 /* ================================================
 //3 Protected Route for Post creation
 ================================================== */
-router.post('/', verifyToken, (req, res) => {
+router.post('/createPost', verifyToken, (req, res) => {
 
     if (!req.body.title) {
         res.json({
@@ -759,5 +823,44 @@ router.delete('/deleteBlog/:id', verifyToken, (req, res) => {
 });
 
 
+
+
 //Exporting the module
 module.exports = router;
+
+
+
+
+///pagination
+// router.get('/p', (req, res, next) => {
+
+//     if (!req.query.page)
+//         return res.status(501).json({
+//             success: false,
+//             message: "Invalid Page"
+//         });
+//     var page = parseInt(req.query.page);
+//     var postPerPage = 3;
+//     Post.find({}, (err, posts) => {
+//         if (err) {
+//             res.status(501).json({
+//                 success: false,
+//                 message: err
+//             })
+//         } else {
+//             if (!posts) {
+//                 res.json({
+//                     success: false,
+//                     message: 'No posts found'
+//                 })
+//             } else {
+//                 res.status(200).json({
+//                     success: true,
+//                     posts: posts
+//                 })
+//             }
+//         }
+//     }).populate('author', 'name').sort({ //show the latest post (descending order)
+//         '_id': -1
+//     }).populate('tag', 'tag').skip((page - 1) * postPerPage).limit(postPerPage);
+// });

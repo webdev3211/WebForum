@@ -20,7 +20,7 @@
     <div class="form-group">
       <label for="title">Title</label>
       <div [ngClass]="{'has-error': (form.controls.title.errors?.required && form.controls.title.dirty) , 'has-success': !form.controls.title.errors?.required }">
-        <input  type="text" name="title" class="form-control" placeholder="*What's your programming question? Be specific." autocomplete="off"
+        <input type="text"  name="title" class="form-control" placeholder="*What's your programming question? Be specific." autocomplete="off"
           formControlName="title" />
         <ul class="help-block">
           <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.required">This field is required.</li>
@@ -37,6 +37,7 @@
         <textarea name="content" rows="8" cols="80" placeholder="Write yuor question content here...." class="form-control" formControlName="content"></textarea>
         <ul class="help-block">
           <li *ngIf="form.controls.content.dirty && form.controls.content.errors?.required">This field is required.</li>
+          <!-- <li *ngIf="form.controls.content.dirty">Start writing from second line</li> -->
         </ul>
       </div>
     </div>
@@ -48,7 +49,7 @@
     <div class="form-group">
       <label for="tag">Tags</label>
 
-      <select id="tag" formControlName="tag" (change)="ontagSelect($event)" class="form-control">
+      <select id="tag" formControlName="tag" name="tag" (change)="ontagSelect($event)" class="form-control">
         <option *ngFor="let tag of tags" [ngValue]="tag._id">
           {{ tag.tag }}
         </option>

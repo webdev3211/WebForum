@@ -26,7 +26,10 @@ export class EditPostComponent implements OnInit {
     private postService: PostService,
     private router: Router
 
-  ) { }
+  ) {
+    $("#rightsidebar").hide();
+
+  }
 
   updateBlogSubmit() {
     this.processing = true;
@@ -67,8 +70,8 @@ export class EditPostComponent implements OnInit {
       }
     });
 
-    $("howtoask").show();
-    $("howtoformat").show();
+    $("#howtoask").show();
+    $("#howtoformat").show();
 
   }
 

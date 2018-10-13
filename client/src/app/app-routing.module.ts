@@ -18,6 +18,9 @@ import { PostComponent } from './components/post/post.component';
 import { SinglePostComponent } from './components/post/single-post/single-post.component';
 import { DeletePostComponent } from './components/post/delete-post/delete-post.component';
 import { EditPostComponent } from './components/post/edit-post/edit-post.component';
+import { DevelopersComponent } from './components/developers/developers.component';
+import { NotfoundComponent } from './components/notfound/notfound.component';
+
 
 
 const appRoutes: Routes = [
@@ -72,9 +75,12 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'developers',
+        component: DevelopersComponent,
+    },
+    {
         path: '*',
         component: HomeComponent
-
     }
 
 

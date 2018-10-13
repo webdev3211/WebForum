@@ -5,7 +5,7 @@ import { TagsService } from '../../services/tags.service';
 
 
 
-import { Router } from '@angular/router';
+import { Router, Params, ActivatedRoute } from '@angular/router';
 
 declare var $: any;
 
@@ -16,15 +16,21 @@ declare var $: any;
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
+
 export class HomeComponent implements OnInit {
 
   blogPosts;
   name;
   logedinuserid;
 
+  pgCounter: number;
+  qpage: number;
+  totalrows;
+
 
   constructor(
     public authService: AuthService,
+    private route: ActivatedRoute,
     private router: Router,
     private postService: PostService,
     private tagsService: TagsService,
@@ -35,16 +41,44 @@ export class HomeComponent implements OnInit {
 
     $("#howtoask").hide();
     $("#howtoformat").hide();
-    this.getAllBlogs();
-
+    $(".footer").hide();
+    // $(window).scrollTop(0);
 
   }
 
-  getAllBlogs() {
-    this.postService.get_AllBlogs().subscribe(data => {
-      this.blogPosts = data.posts;
+  getAllBlogs(payload?) {
+    this.postService.get_AllBlogs(payload).subscribe(data => {
+
+      this.totalrows = data.posts.total;
+      this.pgCounter = Math.floor((this.totalrows + 10 - 1) / 10);
+
+      this.blogPosts = data.posts.docs;
+
     });
   }
+
+  setPage(page): void {
+    this.router.navigate(['/'],
+      {
+        queryParams: { page: page }
+      }
+    );
+    setTimeout(function () {
+      $(window).scrollTop(0);
+    }, 1500);
+
+  }
+
+  createPager(number) {
+    var items: number[] = [];
+    for (var i = 1; i <= number; i++) {
+      items.push(i);
+    }
+
+    return items;
+  }
+
+
 
   likeBlog(id) {
     this.postService.likeBlog(id).subscribe(data => {
@@ -55,7 +89,7 @@ export class HomeComponent implements OnInit {
 
   }
 
-  dislikeBlog(id) {
+  dislikeBlog(id, payload) {
     this.postService.dislikeBlog(id).subscribe(data => {
       console.log(id);
       this.getAllBlogs();
@@ -75,18 +109,36 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
+
+
+
     $("#howtoask").hide();
     $("#howtoformat").hide();
 
     $(document).ready(function () {
+      $("#rightsidebar").show();
+
       $('#centerdiv').removeClass('col-md-12').addClass('col-md-7');
       $('#rightdiv').show();
       $('#leftdiv').show();
       $(".vr").show();
+      $(".footer").show();
+      $(window).scrollTop(0);
+
     });
 
 
-    this.getAllBlogs();
+
+
+    this.route.queryParams.forEach((params: Params) => {
+      this.qpage = params['page'] || '';
+      let payload: any = {};
+      payload.page = this.qpage;
+
+      this.getAllBlogs(payload);
+
+    })
+
   }
 
 }
