@@ -1,8 +1,23 @@
 var mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
+var notificationSchema=mongoose.Schema({
+    content:{
+        type:String,
+        required:true
+    },
+    isSeen:{
+        type:Boolean,
+        default:false
+    },
+    link:{
+        type:String
+    }
+
+});
 
 var userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
+    notification:[notificationSchema],
     image:{
         type:String
     },

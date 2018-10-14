@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   searchResults;
   sForm;
   value = '';
+  show=false;
 
   constructor(
     private formBuilder: FormBuilder, 
@@ -31,8 +32,12 @@ export class NavbarComponent implements OnInit {
    
     
    }
-
-   onEnter(value: string) { 
+   makezero()
+   {
+     this.show=false;
+   }
+   onEnter(value: string) {
+     this.show=true;
      this.searchingfor = value;
 
      const searchh = {

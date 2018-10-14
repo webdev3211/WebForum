@@ -156,12 +156,65 @@ router.post('/comment', verifyToken, (req, res, next) => {
                     commentator: req.decoded.userId
                 };
                 post.comments.push(comment);
-                post.save().then(data => {
-                    res.status(501).json({
-                        success: true,
-                        post: data,
-                        message: 'Commented!!'
-                    });
+                post.save().then(upost => {
+                             
+                        ///NOTIFICATION START
+                         
+                        User.findById(upost.author)
+                        .then(data=>{
+                         if(data)
+                         {
+                             var notification={
+                                 content:req.decoded.name+"has answered your question",
+                                 isSeen:false,
+                                 link:post._id
+                             }
+                             data.notification.push(notification);
+                             data.save()
+                             .then(user=>{
+                                //  res.status(200).json({
+                                //      success:true,
+                                //      data:user
+                                //  });
+
+                                res.status(200).json({
+                                        success: true,
+                                        post: upost,
+                                        message: 'Commented!!'
+                                    });
+                
+
+
+                             }).catch(err=>{
+                                 res.status(501).json({
+                                     success:false,
+                                     message:"Unable to save",
+                                     error:err
+                                 });
+                             })
+             
+                         }
+                        })
+                        .catch(err=>{
+                           res.status(501).json({
+                               success:false,
+                               message:"No user found"
+                           }); });
+
+
+
+
+                       ///NOTIFICATION END
+                    // res.status(200).json({
+                    //     success: true,
+                    //     post: data,
+                    //     message: 'Commented!!'
+                    // });
+
+
+
+
+
                 }).catch(err => {
                     res.status(501).json({
                         success: false,
