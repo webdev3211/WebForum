@@ -22,8 +22,14 @@
               
               <!-- (keydown)="search($event)" -->
               <!-- (keyup)="onKey($event)" -->
-            <input #box (keyup)="onEnter(box.value)" id="searchbar" type="text" class="form-control"  autocomplete="off" placeholder="Search" name="search" style="margin-left: 70px; width: 500px;" />
-            <div *ngIf="box.value.length>0">
+            
+              <input #box (keyup)="onEnter(box.value)" id="searchbar" type="text" class="form-control"  autocomplete="off" placeholder="Search" name="search" style="margin-left: 70px; width: 500px;" />
+              <button 
+              *ngIf="show&&box.value.length>0"
+              class="btn btn-primary btn-block" (click)="makezero()">X</button>
+  
+              <div *ngIf="box.value.length>0&&show">
+    
                 <div *ngIf="searchResults.length" class="panel-footer" style="position:relative; z-index:1000;   border:1px solid #ccc;
                 background:#fff;">
                 

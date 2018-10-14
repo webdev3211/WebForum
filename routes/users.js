@@ -19,7 +19,93 @@ var storage = multer.diskStorage({
   });
    
 var upload = multer({ storage: storage });
+/*===========================================
+//SHOW MY NOTIFIACTION SYSTEM BUT THIS DATA IS ALSO AVAILABLE 
+//WITH USER DATA SO THIS MAY OR NOT BE HELPFUL THIS IS DONE FOR
+//TESTING PURSPOSE
+===========================================*/
+router.get('/notification/:id',(req,res,next)=>{
+    User.findById(req.params.id)
+           .then(data=>{
+            if(data)
+            {
+                res.status(501).json({
+                    success:true,
+                    data:data.notification
+                });
 
+            }
+           })
+           .catch(err=>{
+              res.status(501).json({
+                  success:false,
+                  message:"No user found"
+              }); });
+});
+//////////////////////////////
+/*router.post('/notification/:id',(req,res,next)=>{
+    User.findById(req.params.id)
+           .then(data=>{
+            if(data)
+            {
+                var comment={
+                    content:req.body.content,
+                    isSeen:false,
+                    link:req.body.link
+                }
+                data.notification.push(comment);
+                data.save()
+                .then(user=>{
+                    res.status(200).json({
+                        success:true,
+                        data:user
+                    });
+                }).catch(err=>{
+                    res.status(501).json({
+                        success:false,
+                        message:"Unable to save",
+                        error:err
+                    });
+                })
+
+            }
+           })
+           .catch(err=>{
+              res.status(501).json({
+                  success:false,
+                  message:"No user found"
+              }); });
+});
+*/
+//===========================================
+//THis Is IMPORTANT !!IT IS A REQUEST HANDLER WHEN USER CLICK
+//ON THIS IT WILL MAKE PARTICULAR NOTIFATION SEEN AND REDIRECT TO
+//RELEVANT POST
+//Notifiction handler to make it seen
+//SEEN NOT WORKING WITH REDIRECT 
+//REDIRECT NOT WORKING WITH SEEN
+//INSTEAD OF PASSING USERID WE CAN USE VERIFY TOKEN
+//========================================================
+router.get('/notification/:userId/:notId',/*verifyToken,*/(req,res)=>{
+   if(!req.params.notId||!req.params.userId)
+   return res.status(501).json({success:false,message:"No Notification Id detected"});
+   User.findById(req.params.userId)
+   .then(data=>{
+    data.notification.id(req.params.notId).isSeen=true;
+    var link=data.notification.id(req.params.notId).link;
+    //res.redirect('/posts/'+link);
+     res.status(200).json({
+         success:true,
+         data:data
+     });
+   })
+   .catch(err=>{
+    res.status(200).json({
+        success:false,
+        message:"User not found"
+    });
+   });
+});
 /*==============================================
 //EDIT PROFILE AND UPLOAD IMAGE
 ===============================================*/
