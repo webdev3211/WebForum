@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from '../../services/auth.service'
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FlashMessagesService } from 'angular2-flash-messages';
 import { PostService } from '../../services/post.service';
 import { TagsService } from '../../services/tags.service';
@@ -11,7 +11,8 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrls: ['./navbar.component.css'],
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavbarComponent implements OnInit {
 
@@ -19,36 +20,67 @@ export class NavbarComponent implements OnInit {
   searchResults;
   sForm;
   value = '';
-  show=false;
+  show = false;
+  notifications;
+  userid;
+  notificationlist;
 
   constructor(
-    private formBuilder: FormBuilder, 
+    private route: ActivatedRoute,
+    private formBuilder: FormBuilder,
     private postService: PostService,
-
     public authService: AuthService,
     private router: Router,
     private flashMessage: FlashMessagesService
   ) {
-   
-    
-   }
-   makezero()
-   {
-     this.show=false;
-   }
-   onEnter(value: string) {
-     this.show=true;
-     this.searchingfor = value;
 
-     const searchh = {
-       search: this.searchingfor
-     }
-    this.postService.searching(searchh).subscribe(data => {
-        this.searchResults = data.data;
+
+  }
+
+  movetonotificationpost(id, link) {
+
+    this.authService.readNotification(id).subscribe(data => {
+      this.notificationlist = data.data;
+
     });
- 
-   }
-   
+
+
+    // this.authService
+    console.log(id);
+    setTimeout(() => {
+      this.router.navigate(['/singlePost', link]);
+      location.reload();
+
+    }, 1000);
+
+
+  }
+
+
+  movetopost(id) {
+    console.log(id);
+    setTimeout(() => {
+      this.router.navigate(['/singlePost', id]);
+      location.reload();
+
+    }, 100);
+
+    this.show = false;
+  }
+
+  onEnter(value: string) {
+    this.show = true;
+    this.searchingfor = value;
+
+    const searchh = {
+      search: this.searchingfor
+    }
+    this.postService.searching(searchh).subscribe(data => {
+      this.searchResults = data.data;
+    });
+
+  }
+
   //  search($event: any){
   //  this.searchingfor = $event.target.value;
 
@@ -59,11 +91,13 @@ export class NavbarComponent implements OnInit {
 
   //  }
 
-   
+  toggleshow() {
+    this.show = false;
+  }
 
-   
+
   //  onKey(event: any) { // without type info
-   
+
   //   // Create blog object from form fields
   //   const searchh = {
   //     search: this.form.get('search').value, // Title field
@@ -85,6 +119,23 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    this.authService.getProfile().subscribe(profile => {
+      this.userid = profile.user._id;
+    });
+
+
+    this.authService.getNotifications().subscribe(data => {
+      this.notifications = data.data;
+      this.notificationlist = this.notifications;
+    })
+
+    // console.log(this.userid);
+    // this.postService.getNotification().subscribe(data => {
+    //   this.notifications = data.data;
+    // });
+
+
   }
 
 

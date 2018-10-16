@@ -8,40 +8,94 @@ var Post = require('../models/posts');
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
-var multer=require('multer');
+var multer = require('multer');
+
 var storage = multer.diskStorage({
-    destination:function (req, file, cb) {
-        cb(null,'uploads/')
-      },
+    destination: function (req, file, cb) {
+        cb(null, 'uploads/')
+    },
     filename: function (req, file, cb) {
-      cb(null, Date.now()+'-'+file.originalname);
+        cb(null, Date.now() + '-' + file.originalname);
     }
-  });
-   
-var upload = multer({ storage: storage });
+});
+
+var upload = multer({
+    storage: storage
+});
+
+
+
+
+
+//===========================================
+//THis Is IMPORTANT !!IT IS A REQUEST HANDLER WHEN USER CLICK
+//ON THIS IT WILL MAKE PARTICULAR NOTIFATION SEEN AND REDIRECT TO
+//RELEVANT POST
+//Notifiction handler to make it seen
+//SEEN NOT WORKING WITH REDIRECT 
+//REDIRECT NOT WORKING WITH SEEN
+//INSTEAD OF PASSING USERID WE CAN USE VERIFY TOKEN
+//========================================================
+
+router.get('/notification/:id', verifyToken, (req, res) => {
+    if (!req.params.id)
+        return res.status(501).json({
+            success: false,
+            message: "No Notification Id detected"
+        });
+    User.findById(req.decoded.userId)
+        .then(data => {
+            data.notification.id(req.params.id).isSeen = true;
+            var link = data.notification.id(req.params.id).link;
+            data.save();
+            res.status(200).json({
+                success: true,
+                data: data
+            });
+        })
+        .catch(err => {
+            res.status(200).json({
+                success: false,
+                message: "User not found"
+            });
+        });
+});
+
+
 /*===========================================
 //SHOW MY NOTIFIACTION SYSTEM BUT THIS DATA IS ALSO AVAILABLE 
 //WITH USER DATA SO THIS MAY OR NOT BE HELPFUL THIS IS DONE FOR
 //TESTING PURSPOSE
 ===========================================*/
-router.get('/notification/:id',(req,res,next)=>{
-    User.findById(req.params.id)
-           .then(data=>{
-            if(data)
-            {
-                res.status(501).json({
-                    success:true,
-                    data:data.notification
-                });
+router.get('/notifications', verifyToken, (req, res, next) => {
+    User.findOne({
+            _id: req.decoded.userId
+        }).then(data => {
+            if (data) {
+                res.status(200).json({
+                    success: true,
+                    data: data.notification,
+                    message: 'notification of users'
+                })
 
+            } else {
+                res.status(501).json({
+                    message: 'error fetching notification of user',
+                    success: false
+                })
             }
-           })
-           .catch(err=>{
-              res.status(501).json({
-                  success:false,
-                  message:"No user found"
-              }); });
+        })
+        .catch(err => {
+            res.status(501).json({
+                success: false,
+                message: "No user found"
+            });
+        });
 });
+
+
+
+
 //////////////////////////////
 /*router.post('/notification/:id',(req,res,next)=>{
     User.findById(req.params.id)
@@ -76,52 +130,29 @@ router.get('/notification/:id',(req,res,next)=>{
                   message:"No user found"
               }); });
 });
-*/
-//===========================================
-//THis Is IMPORTANT !!IT IS A REQUEST HANDLER WHEN USER CLICK
-//ON THIS IT WILL MAKE PARTICULAR NOTIFATION SEEN AND REDIRECT TO
-//RELEVANT POST
-//Notifiction handler to make it seen
-//SEEN NOT WORKING WITH REDIRECT 
-//REDIRECT NOT WORKING WITH SEEN
-//INSTEAD OF PASSING USERID WE CAN USE VERIFY TOKEN
-//========================================================
-router.get('/notification/:userId/:notId',/*verifyToken,*/(req,res)=>{
-   if(!req.params.notId||!req.params.userId)
-   return res.status(501).json({success:false,message:"No Notification Id detected"});
-   User.findById(req.params.userId)
-   .then(data=>{
-    data.notification.id(req.params.notId).isSeen=true;
-    var link=data.notification.id(req.params.notId).link;
-    //res.redirect('/posts/'+link);
-     res.status(200).json({
-         success:true,
-         data:data
-     });
-   })
-   .catch(err=>{
-    res.status(200).json({
-        success:false,
-        message:"User not found"
-    });
-   });
-});
+
+
+
+
+
 /*==============================================
 //EDIT PROFILE AND UPLOAD IMAGE
 ===============================================*/
-router.post('/profile/:id',upload.single('image'),(req,res,next)=>{
-             
-    if(req.file)
-    req.body.image=req.file.filename;
+router.post('/profile/:id', upload.single('image'), (req, res, next) => {
+
+    if (req.file)
+        req.body.image = req.file.filename;
     //req.decoded.userId
-    User.findByIdAndUpdate(req.params.id,req.body,{new:true})
-        .then(data=>{
+    User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true
+        })
+        .then(data => {
             res.status(200).json(data);
         })
-        .catch(err=>{
+        .catch(err => {
             res.status(501).json({
-                success:false,
-                message:"Unable to Update"
+                success: false,
+                message: "Unable to Update"
             });
         });
 });
@@ -155,7 +186,7 @@ router.get('/allusers', (req, res, next) => {
 /*==============================================
 //SHOW MY OWN POSTS ROUTE
 ===============================================*/
-router.get('/myposts', verifyToken, (req, res) => {
+router.get('/myposts', (req, res) => {
     Post.find({
             author: req.decoded.userId
         })
@@ -233,44 +264,6 @@ router.post('/login', (req, res, next) => {
     }
 });
 
-/* ================================================
-MIDDLEWARE - Used to grab user's token from headers
-================================================ 
-
-//Verify if token is present or not
-function verifyToken(req, res, next) {
-    var bearerHeader = req.headers['authorization']; // Create token found in headers
-    // Check if token was found in headers
-    if (bearerHeader !== undefined) {
-        var bearer = bearerHeader.split(' ');
-        var bearerToken = bearer[1];
-        req.token = bearerToken;
-    }
-
-    if (!bearerToken) {
-        res.json({
-            success: false,
-            message: 'No token provided'
-        }); // Return error
-    } else {
-        // Verify the token is valid
-        jwt.verify(req.token, 'somesecretkey', (err, decoded) => {
-            // Check if error is expired or invalid
-            if (err) {
-                res.status(403).json({
-                    success: false,
-                    message: 'Token invalid: ' + err
-                }); // Return error for token validation
-            } else {
-                req.decoded = decoded; // Create global variable to use in any request beyond
-                next(); // Exit middleware
-            }
-        });
-    }
-}
-
-
-*/
 
 /* ===============================================================
    Route to get user's profile data
@@ -377,6 +370,45 @@ router.post('/signup', (req, res, next) => {
 });
 
 module.exports = router;
+
+/* ================================================
+MIDDLEWARE - Used to grab user's token from headers
+================================================ 
+
+//Verify if token is present or not
+function verifyToken(req, res, next) {
+    var bearerHeader = req.headers['authorization']; // Create token found in headers
+    // Check if token was found in headers
+    if (bearerHeader !== undefined) {
+        var bearer = bearerHeader.split(' ');
+        var bearerToken = bearer[1];
+        req.token = bearerToken;
+    }
+
+    if (!bearerToken) {
+        res.json({
+            success: false,
+            message: 'No token provided'
+        }); // Return error
+    } else {
+        // Verify the token is valid
+        jwt.verify(req.token, 'somesecretkey', (err, decoded) => {
+            // Check if error is expired or invalid
+            if (err) {
+                res.status(403).json({
+                    success: false,
+                    message: 'Token invalid: ' + err
+                }); // Return error for token validation
+            } else {
+                req.decoded = decoded; // Create global variable to use in any request beyond
+                next(); // Exit middleware
+            }
+        });
+    }
+}
+
+
+*/
 
 
 /* ================================================
