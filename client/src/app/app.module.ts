@@ -7,6 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MomentModule } from 'angular2-moment';
 
+import { HighlightJsModule, HighlightJsService } from 'angular2-highlight-js';
 // import { HighlightJsModule } from 'ngx-highlight-js';
 
 // import { HighlightModule } from 'ngx-highlightjs';
@@ -44,6 +45,7 @@ import { DeletePostComponent } from './components/post/delete-post/delete-post.c
 import { SinglePostComponent } from './components/post/single-post/single-post.component';
 import { DevelopersComponent } from './components/developers/developers.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { HighlightService } from './highlight.service';
 
 
 
@@ -67,6 +69,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
   ],
   imports: [
 
+    HighlightJsModule,
 
     MomentModule,
     BrowserModule,
@@ -77,7 +80,7 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
     FlashMessagesModule.forRoot(),
 
   ],
-  providers: [AuthService, AuthGuard, NotAuthGuard, TagsService, UsersService, PostService],
+  providers: [AuthService, AuthGuard, NotAuthGuard, TagsService, UsersService, PostService, HighlightService, HighlightJsService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

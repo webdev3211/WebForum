@@ -18,7 +18,9 @@
     "testTsconfig": "tsconfig.spec.json",
     "prefix": "app",
     "styles": [
-      "styles.css"
+      "styles.css",
+      "../node_modules/prismjs/plugins/toolbar/prism-toolbar.css",
+      "../node_modules/prismjs/themes/prism-okaidia.css"
     ],
     "scripts": [
       "../node_modules/jquery/dist/jquery.min.js"

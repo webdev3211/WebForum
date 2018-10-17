@@ -13,6 +13,7 @@ export class ProfileComponent implements OnInit {
 
   name;
   email;
+  userid;
 
   constructor(
     private authService: AuthService
@@ -35,6 +36,7 @@ export class ProfileComponent implements OnInit {
     this.authService.getProfile().subscribe(profile => {
       this.name = profile.user.name;
       this.email = profile.user.email;
+      this.userid = profile.user._id;
     })
   }
 

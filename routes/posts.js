@@ -90,6 +90,7 @@ router.get('/tags/:tagId', (req, res, next) => {
     }
 });
 
+
 /* ================================================
 //Route to send count of posts related with this tag
 ================================================== */
@@ -157,54 +158,54 @@ router.post('/comment', verifyToken, (req, res, next) => {
                 };
                 post.comments.push(comment);
                 post.save().then(upost => {
-                             
-                        ///NOTIFICATION START
-                         
-                        User.findById(upost.author)
-                        .then(data=>{
-                         if(data)
-                         {
-                             var notification={
-                                 content:req.decoded.name+"has answered your question",
-                                 isSeen:false,
-                                 link:post._id
-                             }
-                             data.notification.push(notification);
-                             data.save()
-                             .then(user=>{
-                                //  res.status(200).json({
-                                //      success:true,
-                                //      data:user
-                                //  });
 
-                                res.status(200).json({
-                                        success: true,
-                                        post: upost,
-                                        message: 'Commented!!'
-                                    });
-                
+                    ///NOTIFICATION START
+
+                    User.findById(upost.author)
+                        .then(data => {
+                            if (data) {
+                                var notification = {
+                                    content: req.decoded.name + " has answered your question",
+                                    isSeen: false,
+                                    link: post._id
+                                }
+                                data.notification.push(notification);
+                                data.save()
+                                    .then(user => {
+                                        //  res.status(200).json({
+                                        //      success:true,
+                                        //      data:user
+                                        //  });
+
+                                        res.status(200).json({
+                                            success: true,
+                                            post: upost,
+                                            message: 'Commented!!'
+                                        });
 
 
-                             }).catch(err=>{
-                                 res.status(501).json({
-                                     success:false,
-                                     message:"Unable to save",
-                                     error:err
-                                 });
-                             })
-             
-                         }
+
+                                    }).catch(err => {
+                                        res.status(501).json({
+                                            success: false,
+                                            message: "Unable to save",
+                                            error: err
+                                        });
+                                    })
+
+                            }
                         })
-                        .catch(err=>{
-                           res.status(501).json({
-                               success:false,
-                               message:"No user found"
-                           }); });
+                        .catch(err => {
+                            res.status(501).json({
+                                success: false,
+                                message: "No user found"
+                            });
+                        });
 
 
 
 
-                       ///NOTIFICATION END
+                    ///NOTIFICATION END
                     // res.status(200).json({
                     //     success: true,
                     //     post: data,

@@ -1,15 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewChecked, ElementRef } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { PostService } from '../../../services/post.service';
 import { TagsService } from '../../../services/tags.service';
 import { Router } from '@angular/router';
 
+import { HighlightService } from '../../../highlight.service';
+
+import { HighlightJsService } from 'angular2-highlight-js';
+
+import { ActivatedRoute } from "@angular/router";
 
 
 declare var $: any;
-import { ActivatedRoute } from "@angular/router";
-
 
 
 
@@ -18,12 +21,14 @@ import { ActivatedRoute } from "@angular/router";
   templateUrl: './single-post.component.html',
   styleUrls: ['./single-post.component.css']
 })
-export class SinglePostComponent implements OnInit {
+export class SinglePostComponent implements OnInit, AfterViewChecked {
 
 
   newComment = [];
   enabledComments = [];
   commentForm;
+
+  highlighted: boolean = false;
 
 
   singlePostId;
@@ -40,9 +45,12 @@ export class SinglePostComponent implements OnInit {
   name;
   loggedinuserid;
 
-  constructor(
-    private formBuilder: FormBuilder,
+  commentslist;
 
+  constructor(
+    private highlightJsService: HighlightJsService,
+    private formBuilder: FormBuilder,
+    private highlightService: HighlightService,
     private router: Router,
     private postService: PostService,
     private authService: AuthService,
@@ -51,6 +59,17 @@ export class SinglePostComponent implements OnInit {
     this.currentUrl = this.activatedRoute.snapshot.params; // When component loads, grab the id
     this.createCommentForm();
 
+  }
+
+  highlightByService(target: ElementRef) {
+    this.highlightJsService.highlight(target);
+  }
+
+  ngAfterViewChecked() {
+    if (this.blog && !this.highlighted) {
+      this.highlightService.highlightAll();
+      this.highlighted = true;
+    }
   }
 
   createCommentForm() {
@@ -94,16 +113,22 @@ export class SinglePostComponent implements OnInit {
     const comment = this.commentForm.get('comment').value;
 
     this.postService.postComment(id, comment).subscribe(data => {
+      this.showcommentform = false;
+
       // this.showPost();
       // const index = this.newComment.indexOf(id);
       //  this.newComment.splice(index, 1);
+      this.commentslist = data.post.comments;
       this.enableCommentForm();
       this.commentForm.reset();
       this.processing = false;
       // if (this.enabledComments.indexOf(id) < 0) {
       //   this.expand(id);
       // }
+
+
     });
+
   }
 
 
@@ -127,6 +152,7 @@ export class SinglePostComponent implements OnInit {
         this.message = 'Blog not found.'; // Set error message
       } else {
         this.blog = data.post; // Save blog object for use in HTML
+        this.commentslist = data.post.comments;
         this.loading = false; // Allow loading of blog form
       }
     });

@@ -46,6 +46,8 @@ export class HomeComponent implements OnInit {
 
   }
 
+
+
   getAllBlogs(payload?) {
     this.postService.get_AllBlogs(payload).subscribe(data => {
 
@@ -109,7 +111,6 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit() {
-
 
 
     $("#howtoask").hide();
