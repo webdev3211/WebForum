@@ -160,7 +160,7 @@ router.post('/comment', verifyToken, (req, res, next) => {
                 post.save().then(upost => {
 
                     ///NOTIFICATION START
-
+                    if(upost.author.toString()!==req.decoded.userId.toString()){
                     User.findById(upost.author)
                         .then(data => {
                             if (data) {
@@ -169,7 +169,8 @@ router.post('/comment', verifyToken, (req, res, next) => {
                                     isSeen: false,
                                     link: post._id
                                 }
-                                data.notification.push(notification);
+                                //data.notification.push(notification);
+                                data.notification.unshift(notification);
                                 data.save()
                                     .then(user => {
                                         //  res.status(200).json({
@@ -203,7 +204,16 @@ router.post('/comment', verifyToken, (req, res, next) => {
                         });
 
 
+                    }
+                    else
+                    {
+                        res.status(200).json({
+                        success: true,
+                        post: upost,
+                        message: 'Commented!!'
+                       });
 
+                    }
 
                     ///NOTIFICATION END
                     // res.status(200).json({
