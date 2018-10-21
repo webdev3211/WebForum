@@ -12,7 +12,6 @@ var Tag = require('../models/tags');
 
 
 
-
 /*================================================
 //Route for Searching 
 ==================================================*/
@@ -48,14 +47,14 @@ router.post('/search', (req, res, next) => {
     }
     // console.log(req.query);
     /*  res.status(200).json({
-          query:req.query
-      });*/
+    query:req.query
+    });*/
 
 });
 
 /* ================================================
 // Route to get posts according to tag
- ================================================== */
+================================================== */
 
 router.get('/tags/:tagId', (req, res, next) => {
 
@@ -134,10 +133,12 @@ router.get('/tags/count/:tagId', (req, res, next) => {
 //ALL COMMENTS ROUTES
 
 /* ================================================
-  1) Route to create comment
- ================================================== */
+1) Route to create comment
+================================================== */
 
 router.post('/comment', verifyToken, (req, res, next) => {
+    const io = req.app.get('io');
+
     Post.findById(req.body.id).then(post => {
         if (!post) {
             return res.status(501).json({
@@ -157,61 +158,62 @@ router.post('/comment', verifyToken, (req, res, next) => {
                     commentator: req.decoded.userId
                 };
                 post.comments.push(comment);
-                post.save().then(upost => {
+                post.save().
+                then(upost => {
+
+                    // io.emit('newTaskAdded');
 
                     ///NOTIFICATION START
-                    if(upost.author.toString()!==req.decoded.userId.toString()){
-                    User.findById(upost.author)
-                        .then(data => {
-                            if (data) {
-                                var notification = {
-                                    content: req.decoded.name + " has answered your question",
-                                    isSeen: false,
-                                    link: post._id
+                    if (upost.author.toString() !== req.decoded.userId.toString()) {
+                        User.findById(upost.author)
+                            .then(data => {
+                                if (data) {
+                                    var notification = {
+                                        content: req.decoded.name + " has answered your question",
+                                        isSeen: false,
+                                        link: post._id
+                                    }
+                                    //data.notification.push(notification);
+                                    data.notification.unshift(notification);
+                                    data.save()
+                                        .then(user => {
+                                            //  res.status(200).json({
+                                            //      success:true,
+                                            //      data:user
+                                            //  });
+
+                                            res.status(200).json({
+                                                success: true,
+                                                post: upost,
+                                                message: 'Commented!!'
+                                            });
+
+
+
+                                        }).catch(err => {
+                                            res.status(501).json({
+                                                success: false,
+                                                message: "Unable to save",
+                                                error: err
+                                            });
+                                        })
+
                                 }
-                                //data.notification.push(notification);
-                                data.notification.unshift(notification);
-                                data.save()
-                                    .then(user => {
-                                        //  res.status(200).json({
-                                        //      success:true,
-                                        //      data:user
-                                        //  });
-
-                                        res.status(200).json({
-                                            success: true,
-                                            post: upost,
-                                            message: 'Commented!!'
-                                        });
-
-
-
-                                    }).catch(err => {
-                                        res.status(501).json({
-                                            success: false,
-                                            message: "Unable to save",
-                                            error: err
-                                        });
-                                    })
-
-                            }
-                        })
-                        .catch(err => {
-                            res.status(501).json({
-                                success: false,
-                                message: "No user found"
+                            })
+                            .catch(err => {
+                                res.status(501).json({
+                                    success: false,
+                                    message: "No user found"
+                                });
                             });
-                        });
 
 
-                    }
-                    else
-                    {
+                    } else {
                         res.status(200).json({
-                        success: true,
-                        post: upost,
-                        message: 'Commented!!'
-                       });
+                            success: true,
+                            post: upost,
+                            message: 'Commented!!'
+                        });
 
                     }
 
@@ -375,8 +377,8 @@ router.delete('/:postId/comment/:commentId', (req, res, next) => {
 
 
 /* ===============================================================
-     LIKE  POST
-  =============================================================== */
+LIKE  POST
+=============================================================== */
 router.put('/like', verifyToken, (req, res, next) => {
     if (!req.body.id) {
         res.json({
@@ -470,7 +472,7 @@ router.put('/like', verifyToken, (req, res, next) => {
 
 
 /* ===============================================================
-   DISLIKE  POST
+DISLIKE  POST
 =============================================================== */
 
 router.put('/dislike', verifyToken, (req, res, next) => {
@@ -684,8 +686,8 @@ router.get('/:postId', (req, res) => {
                             message: 'Post Not Found'
                         })
                     } else {
-                        // post.viewcount++;
-                        // post.save();
+                        post.viewcount++;
+                        post.save();
                         res.status(200).json({
                             message: 'Voila',
                             success: true,

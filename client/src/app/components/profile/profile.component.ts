@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
+import { UsersService } from '../../services/users.service';
 
 declare var $: any;
 
@@ -14,10 +15,17 @@ export class ProfileComponent implements OnInit {
   name;
   email;
   userid;
+  mypostslist;
+
 
   constructor(
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UsersService
   ) { }
+
+
+
+
 
   ngOnInit() {
 
@@ -30,6 +38,7 @@ export class ProfileComponent implements OnInit {
       $('#rightdiv').show();
       $('#leftdiv').show();
       $(".vr").show();
+      $("#rightsidebar").hide();
       $('#centerdiv').removeClass('col-md-12').addClass('col-md-7');
     });
 

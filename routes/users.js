@@ -96,44 +96,6 @@ router.get('/notifications', verifyToken, (req, res, next) => {
 
 
 
-//////////////////////////////
-/*router.post('/notification/:id',(req,res,next)=>{
-    User.findById(req.params.id)
-           .then(data=>{
-            if(data)
-            {
-                var comment={
-                    content:req.body.content,
-                    isSeen:false,
-                    link:req.body.link
-                }
-                data.notification.push(comment);
-                data.save()
-                .then(user=>{
-                    res.status(200).json({
-                        success:true,
-                        data:user
-                    });
-                }).catch(err=>{
-                    res.status(501).json({
-                        success:false,
-                        message:"Unable to save",
-                        error:err
-                    });
-                })
-
-            }
-           })
-           .catch(err=>{
-              res.status(501).json({
-                  success:false,
-                  message:"No user found"
-              }); });
-});
-
-
-
-
 
 /*==============================================
 //EDIT PROFILE AND UPLOAD IMAGE
@@ -186,12 +148,14 @@ router.get('/allusers', (req, res, next) => {
 /*==============================================
 //SHOW MY OWN POSTS ROUTE
 ===============================================*/
-router.get('/myposts', (req, res) => {
+router.get('/myposts', verifyToken, (req, res) => {
     Post.find({
             author: req.decoded.userId
         })
         .then(data => {
-            res.status(200).json(data);
+            res.status(200).json({
+                mypost: data
+            });
         })
         .catch(err => {
             res.status(501).json({
@@ -370,6 +334,47 @@ router.post('/signup', (req, res, next) => {
 });
 
 module.exports = router;
+
+
+//////////////////////////////
+/*router.post('/notification/:id',(req,res,next)=>{
+    User.findById(req.params.id)
+           .then(data=>{
+            if(data)
+            {
+                var comment={
+                    content:req.body.content,
+                    isSeen:false,
+                    link:req.body.link
+                }
+                data.notification.push(comment);
+                data.save()
+                .then(user=>{
+                    res.status(200).json({
+                        success:true,
+                        data:user
+                    });
+                }).catch(err=>{
+                    res.status(501).json({
+                        success:false,
+                        message:"Unable to save",
+                        error:err
+                    });
+                })
+
+            }
+           })
+           .catch(err=>{
+              res.status(501).json({
+                  success:false,
+                  message:"No user found"
+              }); });
+});
+
+
+
+
+
 
 /* ================================================
 MIDDLEWARE - Used to grab user's token from headers

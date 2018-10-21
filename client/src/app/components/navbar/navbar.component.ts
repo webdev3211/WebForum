@@ -5,7 +5,7 @@ import { FlashMessagesService } from 'angular2-flash-messages';
 import { PostService } from '../../services/post.service';
 import { TagsService } from '../../services/tags.service';
 import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms';
-
+import * as io from 'socket.io-client';
 
 
 @Component({
@@ -16,6 +16,8 @@ import { FormControl, FormGroup, FormBuilder, Validators } from '@angular/forms'
 })
 export class NavbarComponent implements OnInit {
 
+
+  socket;
   searchingfor = '';
   searchResults;
   sForm;
@@ -24,6 +26,9 @@ export class NavbarComponent implements OnInit {
   notifications;
   userid;
   notificationlist;
+  noofunreadnotiofications;
+  count = 0;
+  viewloaded = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -33,9 +38,15 @@ export class NavbarComponent implements OnInit {
     private router: Router,
     private flashMessage: FlashMessagesService
   ) {
-
+    // this.socket = io();
 
   }
+
+  ngAfterViewInit() {
+    this.viewloaded = true;
+    this.count = this.notificationlist.length;
+  }
+
 
   movetonotificationpost(id, link) {
 
@@ -118,6 +129,16 @@ export class NavbarComponent implements OnInit {
     return false;
   }
 
+  getUserNotifications() {
+    this.authService.getNotifications().subscribe(data => {
+      this.notifications = data.data;
+      this.notificationlist = this.notifications;
+      this.count = this.notificationlist.length;
+
+    })
+
+  }
+
   ngOnInit() {
 
     this.authService.getProfile().subscribe(profile => {
@@ -125,10 +146,19 @@ export class NavbarComponent implements OnInit {
     });
 
 
+    this.getUserNotifications();
+
+    // this.socket.on('newTaskAdded', () => {
+
     this.authService.getNotifications().subscribe(data => {
-      this.notifications = data.data;
-      this.notificationlist = this.notifications;
+
+      this.notificationlist = data.data;
+      this.count = this.notificationlist.length;
     })
+
+    // });
+
+
 
     // console.log(this.userid);
     // this.postService.getNotification().subscribe(data => {

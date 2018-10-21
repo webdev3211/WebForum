@@ -20,6 +20,7 @@ var notificationSchema = mongoose.Schema({
 
 });
 
+
 var userSchema = mongoose.Schema({
     _id: mongoose.Schema.Types.ObjectId,
     notification: [notificationSchema],
@@ -45,6 +46,10 @@ var userSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    // about: {
+    //     type: String,
+    //     default: null
+    // },
 
     resetPasswordToken: String,
     resetPasswordExpires: Date,

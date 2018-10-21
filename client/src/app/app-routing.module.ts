@@ -20,6 +20,7 @@ import { DeletePostComponent } from './components/post/delete-post/delete-post.c
 import { EditPostComponent } from './components/post/edit-post/edit-post.component';
 import { DevelopersComponent } from './components/developers/developers.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
+import { AboutComponent } from './components/about/about.component';
 
 
 
@@ -79,9 +80,14 @@ const appRoutes: Routes = [
         component: DevelopersComponent,
     },
     {
+        path: 'about',
+        component: AboutComponent,
+    },
+    {
         path: '*',
         component: HomeComponent
     }
+
 
 
 ];

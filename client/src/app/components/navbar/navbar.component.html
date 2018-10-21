@@ -66,18 +66,19 @@
               <i class="fa fa-globe fa-2x" aria-hidden="true"></i>
 
               <span class="badge" style="background:red; position: relative; top: -15px; left:-10px">
-                {{notifications.length}}
+
+                {{count}}
               </span>
             </a>
 
-            <ul *ngIf="notifications.length>0" class="dropdown-menu" role="menu" style="width:320px; margin: 0; padding: 0; list-style-type: none; overflow-y:scroll; height: 320px;">
+            <ul *ngIf="notificationlist.length > 0 && viewloaded" class="dropdown-menu" role="menu" style="width:320px; margin: 0; padding: 0; list-style-type: none; overflow-y:scroll; height: 320px;">
 
               <li [ngClass]="{'isseen':  (notification.isSeen)  , 'isnotseen': (!notification.isSeen) }" style="padding:10px" *ngFor="let notification of notificationlist">
                 <a routerLink="singlePost/{{ notification.link }}" (click)="movetonotificationpost(notification._id, notification.link)">
 
                   <div class="row">
                     <div class="col-md-2" style="margin-right: 5px;">
-                      <img src="https://image.ibb.co/b0m3QT/default_avatar.png" style="width:50px; background:#fff; border:none" class="img-circle">
+                      <img src="https://image.ibb.co/b0m3QT/default_avatar.png" style="width:30px; background:#fff; border:none" class="img-circle">
                     </div>
 
                     <div class="col-md-9">
@@ -99,8 +100,8 @@
 
             <ul *ngIf="notifications.length === 0" class="dropdown-menu" role="menu" style="width:300px; margin: 0; padding: 0; list-style-type: none; height: 50px;">
               <li style="padding:10px;">
-                  <a href="#">No unread Notifications</a>
-                </li>
+                <a href="#">No unread Notifications</a>
+              </li>
             </ul>
 
           </li>
@@ -219,6 +220,31 @@
 
   .isnotseen {
     background: #E4E9F2;
+  }
+
+
+  .dropdown-menu::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  /* Track */
+
+  .dropdown-menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 50px;
+
+  }
+
+  /* Handle */
+
+  .dropdown-menu::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+
+  .dropdown-menu::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 
 </style>

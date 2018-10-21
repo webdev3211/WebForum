@@ -10,6 +10,10 @@ var tagSchema = mongoose.Schema({
     description: {
         type: String,
         required: true
+    },
+    postwiththistagcount: {
+        type: Number,
+        default: 0
     }
 });
 

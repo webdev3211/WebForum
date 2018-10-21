@@ -46,6 +46,7 @@ import { SinglePostComponent } from './components/post/single-post/single-post.c
 import { DevelopersComponent } from './components/developers/developers.component';
 import { NotfoundComponent } from './components/notfound/notfound.component';
 import { HighlightService } from './highlight.service';
+import { AboutComponent } from './components/about/about.component';
 
 
 
@@ -66,6 +67,7 @@ import { HighlightService } from './highlight.service';
     SinglePostComponent,
     DevelopersComponent,
     NotfoundComponent,
+    AboutComponent,
   ],
   imports: [
 
