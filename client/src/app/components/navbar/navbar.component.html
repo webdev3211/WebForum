@@ -71,38 +71,40 @@
               </span>
             </a>
 
-            <ul *ngIf="notificationlist.length > 0 && viewloaded" class="dropdown-menu" role="menu" style="width:320px; margin: 0; padding: 0; list-style-type: none; overflow-y:scroll; height: 320px;">
+            <div *ngIf="viewloaded">
+              <ul *ngIf="notificationlist.length > 0" class="dropdown-menu" role="menu" style="width:320px; margin: 0; padding: 0; list-style-type: none; overflow-y:scroll; height: 320px;">
 
-              <li [ngClass]="{'isseen':  (notification.isSeen)  , 'isnotseen': (!notification.isSeen) }" style="padding:10px" *ngFor="let notification of notificationlist">
-                <a routerLink="singlePost/{{ notification.link }}" (click)="movetonotificationpost(notification._id, notification.link)">
+                <li [ngClass]="{'isseen':  (notification.isSeen)  , 'isnotseen': (!notification.isSeen) }" style="padding:10px" *ngFor="let notification of notificationlist">
+                  <a routerLink="singlePost/{{ notification.link }}" (click)="movetonotificationpost(notification._id, notification.link)">
 
-                  <div class="row">
-                    <div class="col-md-2" style="margin-right: 5px;">
-                      <img src="https://image.ibb.co/b0m3QT/default_avatar.png" style="width:30px; background:#fff; border:none" class="img-circle">
+                    <div class="row">
+                      <div class="col-md-2" style="margin-right: 5px;">
+                        <img src="https://image.ibb.co/b0m3QT/default_avatar.png" style="width:30px; background:#fff; border:none" class="img-circle">
+                      </div>
+
+                      <div class="col-md-9">
+
+                        <!-- <b style="color:tomato; font-size:90%"></b> -->
+                        <span style="color:#000; font-size:90%">{{ notification.content }}</span>
+                        <br/>
+                        <small style="color:#90949C">
+                          <i aria-hidden="true" class="fa fa-users" style="color: #3366FF;"></i>
+                          {{ notification.createdAt | amTimeAgo }}
+                        </small>
+                      </div>
+
                     </div>
+                  </a>
 
-                    <div class="col-md-9">
+                </li>
+              </ul>
 
-                      <!-- <b style="color:tomato; font-size:90%"></b> -->
-                      <span style="color:#000; font-size:90%">{{ notification.content }}</span>
-                      <br/>
-                      <small style="color:#90949C">
-                        <i aria-hidden="true" class="fa fa-users" style="color: #3366FF;"></i>
-                        {{ notification.createdAt | amTimeAgo }}
-                      </small>
-                    </div>
-
-                  </div>
-                </a>
-
-              </li>
-            </ul>
-
-            <ul *ngIf="notifications.length === 0" class="dropdown-menu" role="menu" style="width:300px; margin: 0; padding: 0; list-style-type: none; height: 50px;">
-              <li style="padding:10px;">
-                <a href="#">No unread Notifications</a>
-              </li>
-            </ul>
+              <ul *ngIf="notifications.length === 0" class="dropdown-menu" role="menu" style="width:300px; margin: 0; padding: 0; list-style-type: none; height: 50px;">
+                <li style="padding:10px;">
+                  <a href="#">No unread Notifications</a>
+                </li>
+              </ul>
+            </div>
 
           </li>
 
