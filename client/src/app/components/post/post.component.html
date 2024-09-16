@@ -1,0 +1,71 @@
+<div style="margin-left: 15px;">
+  <h1>
+    Ask a Question
+  </h1>
+  <br>
+  <hr>
+
+  <!-- Custom Success/Error Message -->
+  <div class="row show-hide-message" *ngIf="message">
+    <div [ngClass]="messageClass">
+      {{ message }}
+    </div>
+  </div>
+
+  <br>
+
+  <!-- New Blog Form -->
+  <form [formGroup]="form" name="blogForm" (submit)="onBlogSubmit()">
+    <!-- Title Input -->
+    <div class="form-group">
+      <label for="title">Title</label>
+      <div [ngClass]="{'has-error': (form.controls.title.errors?.required && form.controls.title.dirty) , 'has-success': !form.controls.title.errors?.required }">
+        <input type="text"  name="title" class="form-control" placeholder="*What's your programming question? Be specific." autocomplete="off"
+          formControlName="title" />
+        <ul class="help-block">
+          <li *ngIf="form.controls.title.dirty && form.controls.title.errors?.required">This field is required.</li>
+        </ul>
+      </div>
+    </div>
+
+
+
+    <!-- Body Input -->
+    <div class="form-group">
+      <label for="content">Body</label>
+      <div [ngClass]="{'has-error': (form.controls.content.errors?.required && form.controls.content.dirty) , 'has-success': !form.controls.content.errors?.required }">
+        <textarea name="content" rows="8" cols="80" placeholder="Write yuor question content here...." class="form-control" formControlName="content"></textarea>
+        <ul class="help-block">
+          <li *ngIf="form.controls.content.dirty && form.controls.content.errors?.required">This field is required.</li>
+          <!-- <li *ngIf="form.controls.content.dirty">Start writing from second line</li> -->
+        </ul>
+      </div>
+    </div>
+
+    <br>
+    <br>
+
+
+    <div class="form-group">
+      <label for="tag">Tags</label>
+
+      <select id="tag" formControlName="tag" name="tag" (change)="ontagSelect($event)" class="form-control">
+        <option *ngFor="let tag of tags" [ngValue]="tag._id">
+          {{ tag.tag }}
+        </option>
+      </select>
+
+
+    </div>
+
+    <br>
+    <br>
+    <!-- Submit Button -->
+    <button [disabled]="processing || !form.valid" type="submit" name="button" class="btn btn-success">Post your Question</button>
+  </form>
+
+</div>
+
+<div style="margin-top: 100px;">
+
+</div>

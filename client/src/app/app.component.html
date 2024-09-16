@@ -1,0 +1,129 @@
+<app-navbar></app-navbar>
+
+<div class="col-md-2" id="leftdiv">
+  <app-sidebar></app-sidebar>
+</div>
+
+<div class="vr">&nbsp;</div>
+
+
+<div class="col-md-7" id="centerdiv">
+  <flash-messages></flash-messages>
+  <router-outlet>
+
+  </router-outlet>
+</div>
+<br>
+
+<div class="col-md-3" id="rightsidebar">
+  <img src="https://s0.2mdn.net/simgad/14022543625918781205" style="margin-left: 80px;">
+  <br>
+  <br>
+  <div class="panel-group" style="margin-left: 55px;">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">Most Viewed Posts</div>
+      <div class="panel-body" style="height: 360px;">Nothing here now...</div>
+    </div>
+  </div>
+  <br>
+  <br>
+  <div class="panel-group" style="margin-left: 55px;">
+    <div class="panel panel-default">
+      <div class="panel-heading text-center">Most Discussion Posts</div>
+      <div class="panel-body" style="height: 360px;">Nothing here now...</div>
+    </div>
+  </div>
+
+
+  <br>
+
+</div>
+
+
+<footer class="footer">
+  <div class="container">
+    <a routerLink="/developers" style="text-decoration:none; cursor: pointer;">
+
+      <span class="text-muted">&copy; Copyright 2018 | WebDev Community |
+      </span>
+    </a>
+
+    <a routerLink="/about" style="text-decoration:none; cursor: pointer;">
+
+      <span class="text-muted">| About
+      </span>
+    </a>
+
+  </div>
+</footer>
+
+
+<div class="col-md-3" id="rightdiv">
+
+  <div class="panel-group" id="howtoask">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="background: #f7f1d5">How to Ask
+      </div>
+      <div class="panel-body" style="background: #f7e7ce;">
+        <b>Is your question about programming?</b>
+        <br>
+        <br> We prefer questions that can be answered, not just discussed. Provide details. Share your research.
+      </div>
+    </div>
+  </div>
+
+  <br>
+
+  <div class="panel-group" id="howtoformat">
+    <div class="panel panel-default">
+      <div class="panel-heading" style="background: #f7f1d5">How to Format
+      </div>
+      <div class="panel-body" style="background: #f7e7ce;">
+        <p> ► put returns between paragraphs
+          <p> ► for linebreak add 2 spaces at end
+            <p> ► _italic_ or **bold**
+              <p> ► indent code by 4 spaces
+
+                <p> ► backtick escapes `like _so_`
+                  <p> ► quote by placing > at start of line
+                    <p> ► to make links
+
+                      <http://foo.com>
+                        [foo](http://foo.com)
+                        <a href="http://foo.com">foo</a>
+
+                        <br> ► basic HTML also allowed
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+<style>
+  .vr {
+    margin-left: 35px;
+    width: 2px;
+    background-color: grey;
+    position: absolute;
+    top: 55px;
+    bottom: 0;
+    left: 175px;
+    /* height: 2500px; */
+    height: 100%;
+    size: 500;
+  }
+
+  #rightsidebar {
+    user-select: none;
+  }
+
+  #hot-network-questions {
+    font-size: 0.9em;
+  }
+
+</style>

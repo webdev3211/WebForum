@@ -1,0 +1,186 @@
+<div class="row show-hide-message" *ngIf="message">
+  <div [ngClass]="messageClass">
+    {{ message }}
+  </div>
+</div>
+
+
+
+
+<img src="https://tpc.googlesyndication.com/simgad/10464256763402806218" alt="">
+
+
+
+
+<br>
+
+<h3>
+  <b>{{ blog.title }}</b>
+  <br>
+  <br>
+  <div class="pull-right clearfix">
+    <!-- Edit Button -->
+    <a [routerLink]="['/edit-post/', blog._id]" *ngIf="loggedinuserid == blog.author._id" style="text-decoration:none;">
+      <button style="outline:none;" type="button" name="button" class="btn btn-sm btn-default">
+        <span class="glyphicon glyphicon-edit"></span>
+      </button>
+    </a>
+    <!-- Delete Button -->
+    <a (click)="deleteBlog(blog._id)" *ngIf="loggedinuserid == blog.author._id">
+      <button type="button" name="button" class="btn btn-sm btn-danger">
+        <span class="glyphicon glyphicon-trash"></span>
+      </button>
+    </a>
+    <br>
+
+    <br>
+    <br>
+  </div>
+
+  <div class="pull-left clearfix">
+
+    <span style="color: grey; font-size: 0.6em;">
+      Viewed {{ blog.viewcount }} times
+    </span>
+
+  </div>
+
+</h3>
+
+
+<br>
+<hr>
+
+<div class="row">
+
+  <div class="col-md-2">
+    <span>
+      <button id="like" type="button" class="btn btn-sm " name="button" [disabled]="blog.likedBy.indexOf(logedinuserid) > -1" (click)="likeBlog(blog._id)">
+        <span class="glyphicon glyphicon-thumbs-up" style="font-weight:bold; font-size: 1.5em;">&nbsp;
+        </span> {{ blog.likes }}
+      </button>
+      &nbsp;
+      <br>
+      <br>
+      <button id="dislike" type="button" class="btn btn-sm " name="button" [disabled]="blog.dislikedBy.indexOf(logedinuserid) > -1"
+        (click)="dislikeBlog(blog._id)">
+        <span class="glyphicon glyphicon-thumbs-down" style="font-weight:bold; font-size: 1.5em;">&nbsp;</span> {{ blog.dislikes }} </button>
+    </span>
+  </div>
+
+
+  <div class="col-md-10">
+    <!-- <p id="blog-content"> -->
+    <pre class="" id="blog-content">
+        <code  style="text-indent:40px;">
+          {{ blog.content }}
+        </code>
+      </pre>
+    <!-- </p> -->
+    <br>
+    <br>
+    <div>
+      <span id="tagss" style="width: 70px; word-wrap: inherit; padding: 5px 10px;" class="pull-left clearfix">
+        {{ blog.tag.tag }}
+      </span>
+
+      <div style="background: #E1ECF4;margin:0; height: 105px; padding: 20px;" class="pull-right clearfix">
+        <span style="color:gray;">
+          asked {{ blog.createdAt | amTimeAgo }} </span>
+
+        <p style="margin-top: 12px;">
+          <img src="https://image.ibb.co/b0m3QT/default_avatar.png" height="30px" weight="30px" class="img-circle"> &nbsp; {{ blog.author.name }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<hr>
+<br>
+
+<div>
+
+
+
+  <ul class="list-group">
+    <li class="list-group-item">
+      <button type="button" style="outline:none;" name="button" class="btn btn-sm btn-default" (click)="draftComment(blog._id)">
+        Post your Answer
+      </button>
+      <br>
+      <br>
+      <div *ngIf="showcommentform">
+        <form [formGroup]="commentForm" (submit)="postComment(blog._id)">
+          <textarea name="comment" class="form-control" formControlName="comment" cols="30" rows="10"> </textarea>
+          <div [ngClass]="{'has-success': !commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty, 'has-error': commentForm.controls.comment.dirty && commentForm.controls.comment.errors?.required}">
+            <ul class="help-block">
+              <li *ngIf="commentForm.controls.comment.errors?.required && commentForm.controls.comment.dirty">This field is required.</li>
+              <li *ngIf="(commentForm.controls.comment.errors?.maxlength && commentForm.controls.comment.dirty) ||(commentForm.controls.comment.errors?.minlength && commentForm.controls.comment.dirty)">Comment must be at least 5 characters.</li>
+            </ul>
+          </div>
+          <button [disabled]="!commentForm.valid || processing" type="submit" name="button" class="btn btn-sm btn-primary">
+            Post Answer </button>
+          <button [disabled]="processing" type="button" name="button" class="btn btn-sm btn-danger" (click)="cancelSubmission(blog._id)">Cancel</button>
+        </form>
+
+      </div>
+
+  </ul>
+
+
+
+
+  <!-- Comment -->
+
+
+  <div>
+    <ul *ngFor="let comment of commentslist">
+
+      <img class="pull-left img-circle clearfix" style="margin-right: 15px;margin-top: 20px; margin-left: -35px; user-select: none;"
+        src="https://image.ibb.co/b0m3QT/default_avatar.png" height="25px" weight="25px" />
+      <span style="color:#f1f1f1; position: absolute; margin-top: 20px; margin-left: -15px; user-select: none;"> ------ </span>
+
+      <li style=" padding: 5px 10px; margin-right: 15px; border: 0.5px solid #f0f0f0; border-left: 14px solid tomato; margin-left: 15px;"
+        class="list-group-item">
+
+        <strong style="color: gray;">{{ comment.name }} </strong>
+        <span style="color:gray;" class="pull-right clearfix"> {{ comment.createdAt | amTimeAgo }} </span>
+        <br>
+        <br>
+        <br> {{ comment.comment }}
+        <br>
+        <br>
+
+      </li>
+      <br>
+    </ul>
+  </div>
+
+
+
+</div>
+
+<div style="margin-bottom: 280px;">
+
+</div>
+
+
+
+
+<style>
+  #blog-content {
+    font-size: 1em;
+    line-height: 20px;
+  }
+
+
+  #tagss {
+    color: #39739d;
+    background-color: #E1ECF4;
+    border-color: #E1ECF4;
+    height: 25px;
+  }
+
+</style>

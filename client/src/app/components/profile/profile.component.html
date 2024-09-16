@@ -1,0 +1,52 @@
+<h2 class="page-header">Profile Page</h2>
+
+<div class="container">
+  <div class="row card">
+    <div class="col-md-4 ">
+      <div class="card-body">
+        <img src="https://image.ibb.co/b0m3QT/default_avatar.png" style="width:200px; background:#fff; border:none" class="img-circle">
+
+      </div>
+    </div>
+    <div class="col-md-6" style="width:57%;">
+      <ul class="list-group">
+        <li class="list-group-item">Name: {{ name }} </li>
+        <li class="list-group-item">Email: {{ email }} </li>
+      </ul>
+
+    </div>
+
+  </div>
+  <br>
+  <br>
+  <br>
+
+  <h3>
+    <b>Your Posts</b>
+  </h3>
+  <br>
+
+  <div class="row">
+    <div class="col-md-6">
+      <div class="panel-group" style="margin-left: 10px;">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">Most Latest Questions</div>
+          <div class="panel-body" style="height: 360px;">
+            {{ mypostslist }}
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="col-md-5">
+      <div class="panel-group" style="margin-left: 10px;">
+        <div class="panel panel-default">
+          <div class="panel-heading text-center">Most Viewed Posts</div>
+          <div class="panel-body" style="height: 360px;">Nothing here now...</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

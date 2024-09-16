@@ -1,0 +1,5 @@
+.pagination>li>a.selected {
+  color: #ffffff;
+  background-color: #f75f4e;
+  border-color: #f75f4e;
+}
